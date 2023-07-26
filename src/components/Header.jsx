@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation, useNavigate} from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom';
 
 function Header() {

@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai"
 import { NavLink, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
-import { getAuth, createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { db } from '../firebase'
 import { serverTimestamp, setDoc, doc } from 'firebase/firestore';
-import { ToastContainer } from 'react-toastify';
 import { toast } from 'react-toastify'
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
