@@ -1,8 +1,12 @@
 import React, { useState } from 'react'
-import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
-import { NavLink } from 'react-router-dom';
+import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai"
+import { NavLink, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
-
+import { getAuth, createUserWithEmailAndPassword,updateProfile } from "firebase/auth";
+import { db } from '../firebase'
+import { serverTimestamp, setDoc, doc } from 'firebase/firestore';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify'
 function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
@@ -11,14 +15,43 @@ function SignUp() {
     password:""
   });
 
-  const {name, email, password} = formData;
+  const {name, email, password} = formData
+  const navigate = useNavigate()
 
   function onChange(e){
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id] : e.target.value
     }))
-    console.log(e.target.value)
+  }
+
+  async function onSubmit(e) {
+    e.preventDefault();
+  
+    try {
+      const auth = getAuth();
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      updateProfile(auth.currentUser, {
+        displayName: name,
+      });
+      const user = userCredential.user;
+      //save form data to a new variable and delete the form data password
+      const formDataCopy = { ...formData };
+      delete formDataCopy.password;
+      formDataCopy.timestamp = serverTimestamp();
+
+      //save the copy data to users database in fire storage
+      await setDoc(doc(db, "users", user.uid), formDataCopy);
+      navigate('/')
+
+    }catch(error){
+      toast.error("Something went wrong with the registration")
+    }
   }
 
   return (
@@ -29,7 +62,7 @@ function SignUp() {
           <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80" alt="key" className="w-full rounded-2xl"/>
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6" type="text" placeholder='Full Name' id='name' value={name} onChange={onChange}/>
             <input className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6" type="email" placeholder='Email Address' id='email' value={email} onChange={onChange}/>
             <div className="relative mb-6">
