@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai"
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { signInWithEmailAndPassword, getAuth } from 'firebase/auth';
+import { toast } from 'react-toastify';
 
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
@@ -11,12 +13,28 @@ function SignIn() {
   });
 
   const {email, password} = formData;
+  const navigate = useNavigate()
 
   function onChange(e){
     setFormData((prevState) => ({
       ...prevState,
       [e.target.id] : e.target.value
     }))
+  }
+
+  async function onSubmit(e){
+    e.preventDefault()
+
+    try{
+      const auth = getAuth()
+      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+
+      if(userCredential.user){
+        navigate('/')
+      }
+    }catch(error){
+      toast.error('Email/Password does not match!')
+    }
   }
 
   return (
@@ -27,7 +45,7 @@ function SignIn() {
           <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80" alt="key" className="w-full rounded-2xl"/>
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6" type="text" placeholder='Email Address' id='email' value={email} onChange={onChange}/>
             <div className="relative mb-6">
               <input className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out" type={showPassword ? "text" : "password"} placeholder='Password' id="password" value={password} onChange={onChange}/>
