@@ -1,17 +1,7 @@
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router'
 import { NavLink } from 'react-router-dom';
 
 function Header() {
-    const location = useLocation();
-    const navigation = useNavigate();
-    function pathMathRoute(route){
-        if (route === location.pathname){
-            return true
-        }
-    }
-
-
   return (
     <div className="bg-white border-b shadow-sm sticky top-0 z-50">
         <header className='flex justify-between items-center px-3 max-w-6xl mx-auto'>
