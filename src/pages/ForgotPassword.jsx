@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { toast } from 'react-toastify';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -9,6 +11,19 @@ function ForgotPassword() {
     setEmail(e.target.value)
   }
 
+  async function onSubmit(e) {
+    e.preventDefault()
+
+    try{
+      const auth = getAuth()
+      await sendPasswordResetEmail(auth, email)
+      toast.success("Email was sent")
+
+    }catch(error){
+      toast.error("Could not send reset password")
+    }
+  }
+  
   return (
     <section>
       <h1 className="text-3xl text-center mt-6 font-bold">Forgot Password</h1>
@@ -17,7 +32,7 @@ function ForgotPassword() {
           <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1180&q=80" alt="key" className="w-full rounded-2xl"/>
         </div>
         <div className="w-full md:w-[67%] lg:w-[40%] lg:ml-20">
-          <form>
+          <form onSubmit={onSubmit}>
             <input className="w-full px-4 py-2 text-xl text-gray-700 bg-white border-gray-300 rounded transition ease-in-out mb-6" type="email" placeholder='Email Address' id='email' value={email} onChange={onChange}/>
             <div className="flex justify-between whitespace-nowrap text-sm sm:text-lg">
                 <p className="mb-6">Don't have an account? <NavLink to="/sign-up" className="text-red-600 hover:text-red-700 transition duration-200 ease-in-out ml-1">Register</NavLink></p>
