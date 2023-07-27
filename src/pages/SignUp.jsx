@@ -14,6 +14,7 @@ function SignUp() {
     password:""
   });
 
+  // Code below is the same as formData.name, formData.email, formData.password
   const {name, email, password} = formData
   const navigate = useNavigate()
 
