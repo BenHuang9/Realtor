@@ -14,7 +14,6 @@ function Header() {
             }else{
                 setCheckSignIn(false)
             }
-            console.log(user)
         })
         
         
