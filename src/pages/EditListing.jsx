@@ -1,20 +1,23 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
 import { getStorage, uploadBytesResumable, getDownloadURL, ref as storRef  } from "firebase/storage";
-import { serverTimestamp, addDoc, collection } from 'firebase/firestore';
+import { } from "firebase/storage";
+import { serverTimestamp, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase'
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usePlacesWidget } from "react-google-autocomplete";
 
-function CreateListing() {
+function EditListing() {
     // if use google geolocation with bank card set to true
     const auth = getAuth()
     const navigate = useNavigate()
     const [geolocationEnabled, setGeolocationEnabled] =useState(true)
     const [loading, setLoading] =useState(false)
+    const [listing, setListing] =useState(null)
+
     const [formData, setFormData] = useState({
         type: "rent",
         name: "",
@@ -51,6 +54,33 @@ function CreateListing() {
         images,
         geolocation
     } = formData
+
+    const params = useParams();
+
+  useEffect(() => {
+    // console.log(listing.userRef)
+    if (listing && listing.userRef !== auth.currentUser.uid) {
+      toast.error("You can't edit this listing");
+      navigate("/");
+    }
+  }, [auth.currentUser.uid, listing, navigate]);
+
+  useEffect(() => {
+    // setLoading(true);
+    async function fetchListing() {
+      const docRef = doc(db, "listings", params.listingId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setListing(docSnap.data());
+        setFormData({ ...docSnap.data() });
+        setLoading(false);
+      } else {
+        navigate("/");
+        toast.error("Listing does not exist");
+      }
+    }
+    fetchListing();
+  }, [navigate, params.listingId]);
 
 
     const { ref } = usePlacesWidget({
@@ -181,9 +211,10 @@ function CreateListing() {
         !formDataCopy.offer && delete formDataCopy.discountedPrice
         delete formDataCopy.latitude
         delete formDataCopy.longitude
-        const docRef = await addDoc(collection(db, "listings"), formDataCopy)
+        const docRef = doc(db, "listings", params.listingId)
+        await updateDoc(docRef, formDataCopy)
         setLoading(false)
-        toast.success("Listing created.")
+        toast.success("Listing is updated.")
         navigate(`/category/${formDataCopy.type}/${docRef.id}`)
     }
 
@@ -197,7 +228,7 @@ function CreateListing() {
 
     return (
         <main className="max-w-md px-2 mx-auto">
-            <h1 className="text-3xl text-center mt-6 font-bold">Create a Listing</h1>
+            <h1 className="text-3xl text-center mt-6 font-bold">Edit Listing</h1>
             <form onSubmit={onSubmit}>
                 <p className="text-lg mt-6 font-semibold">Sell / Rent</p>
                 <div className="flex justify-between">
@@ -424,10 +455,10 @@ function CreateListing() {
                         className="w-full px-3 py-1.5 text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:bg-white focus:border-slate-600"
                     />
                 </div>
-                <button type="submit" className="mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-xl transition duration-200 ease-in-out">Create Listing</button>
+                <button type="submit" className="mb-6 w-full px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg active:bg-blue-800 active:shadow-xl transition duration-200 ease-in-out">Edit Listing</button>
             </form>
         </main>
     )
 }
 
-export default CreateListing
+export default EditListing
