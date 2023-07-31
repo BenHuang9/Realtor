@@ -9,13 +9,17 @@ import { EffectFade, Autoplay, Navigation } from 'swiper/modules'
 import "swiper/css/bundle"
 import { FaShare, FaBed, FaBath, FaParking, FaChair } from "react-icons/fa"
 import { MdLocationOn } from "react-icons/md"
+import { getAuth } from 'firebase/auth';
+import Contact from '../components/Contact';
 
 function Listing() {
 
+    const auth = getAuth()
     const params = useParams()
     const [listing, setListing] = useState(null)  
     const [loading, setLoading] = useState(true)  
     const [shareLinkCopied,setShareLinkCopied] = useState(false)
+    const [contactLandlord, setContactLandlord] = useState(false)
 
     SwiperCore.use([Autoplay, Navigation])
 
@@ -61,8 +65,9 @@ function Listing() {
         </div>
 
         {shareLinkCopied && <p className="fixed top-[9%] right-[3%] z-10 font-semibold border-2 border-gray-400 bg-white rounded-md">Link Copied</p>}
-        <div className="m-4 bg-white flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg">
-            <div className=" w-full h-[200px] lg:h-[400px]">
+        
+        <div className="m-4 bg-white flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg gap-5">
+            <div className="w-full">
                 <p className="text-2xl font-bold mb-3">
                     {listing.name} - $ {listing.offer 
                     ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") 
@@ -83,7 +88,7 @@ function Listing() {
                     <span className="font-semibold">Description - </span>
                     {listing.description}
                 </p>
-                <ul className="flex items-center space-x-5 text-sm font-semibold whitespace-nowrap">
+                <ul className="flex items-center space-x-5 text-sm font-semibold whitespace-nowrap mb-6">
                     <li className="flex items-center whitespace-nowrap">
                         <FaBed className="mr-1"/>
                         {listing.bedrooms > 1 ? `${listing.bedrooms} Bedrooms` : "1 Bedroom"}
@@ -101,9 +106,26 @@ function Listing() {
                         {listing.furnished ? "Park Avbl." : "No Furnished"}
                     </li>
                 </ul>
-                
+                {/* if the userRef is not the same as the user who create the listing and if contactLandlord is false, show the button */}
+                {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
+                    <div className="mt-6">
+                        <button 
+                            onClick={() => 
+                                setContactLandlord(true)
+                            }
+                            className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-200 ease-in-out">
+                            Contact Landlord
+                        </button>
+                    </div>
+                )}
+                {contactLandlord && 
+                    <Contact 
+                        userRef={listing.userRef}
+                        listing={listing}
+                    />
+                }
             </div>
-            <div className="bg-blue-300 w-full h-[200px] lg:h-[400px] z-10 overflow-x-hidden"></div>
+            <div className="bg-blue-300 w-full lg:h-[400px] z-10 overflow-x-hidden"></div>
         </div>
     </main>
     </>
