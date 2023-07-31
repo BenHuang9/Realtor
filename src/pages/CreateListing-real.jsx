@@ -1,14 +1,12 @@
 import React, { useState } from "react"
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
-import { getStorage, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { ref as storRef } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { serverTimestamp, addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase'
 import { getAuth } from "firebase/auth";
 import { v4 as uuidv4 } from "uuid"
 import { useNavigate } from 'react-router-dom';
-import { usePlacesWidget } from "react-google-autocomplete";
 
 function CreateListing() {
     // if use google geolocation with bank card set to true
@@ -31,7 +29,7 @@ function CreateListing() {
         latitude: 0,
         longitude: 0,
         images: {},
-        geolocation: {lat: 0, lng: 0}
+        
     })
 
     // Code below is the same as formData.type, formData.name
@@ -50,33 +48,8 @@ function CreateListing() {
         latitude,
         longitude,
         images,
-        geolocation
     } = formData
 
-
-    const { ref } = usePlacesWidget({
-        apiKey: process.env.REACT_APP_GEOCODE_API_KEY,
-        onPlaceSelected: (place) => {
-          console.log(place);
-          console.log(place.formatted_address)
-          geolocation.lat = place.geometry.location.lat()
-          geolocation.lng = place.geometry.location.lng()
-          setFormData((prevState) => ({
-            ...prevState,
-            address: place.formatted_address,
-            geolocation,lat: place.geometry.location.lat(),
-            geolocation,lng: place.geometry.location.lng(),
-        }))
-        },
-        options: {
-          types: ["address"],
-          componentRestrictions: { country: "ca" },
-          
-        },
-        
-      });
-
-      console.log(geolocation)
 
     function onChange(e){
         let boolean = null
@@ -100,8 +73,6 @@ function CreateListing() {
         }
     }
 
-    console.log(images)
-
     async function onSubmit(e){
         e.preventDefault()
         setLoading(true)
@@ -118,15 +89,42 @@ function CreateListing() {
             toast.error("Only 6 images is allowed!")
             return
         }
-        
+        console.log(images)
 
+        let geolocation = {}
+        let location //if use google map api
+
+        if(geolocationEnabled){
+            const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.REACT_APP_GEOCODE_API_KEY}`)
+
+            const data = await response.json()
+            console.log(data)
+
+            //if data result 0 is exist, we check if geometry->location->latitude does not exist return 0
+            geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
+            //if data result 0 is exist, we check if geometry->location->longitude does not exist return 0
+            geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
+
+
+            //if data status is Zero Results, we set the location to undefined
+            location = data.status === "ZERO_RESULTS" && undefined
+
+            if(location === undefined) {
+                setLoading(false)
+                toast.error("Please enter a correct address")
+                return
+            }
+        }else{
+            geolocation.lat = latitude
+            geolocation.lng = longitude
+        }
 
         async function storeImage(image){
             return new Promise((resolve, reject) => {
 
                 const storage = getStorage();
                 const filename = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
-                const storageRef = storRef(storage, filename)
+                const storageRef = ref(storage, filename)
                 const uploadTask = uploadBytesResumable(storageRef, image)
 
                 uploadTask.on('state_changed', 
@@ -147,7 +145,6 @@ function CreateListing() {
                     (error) => {
                         // Handle unsuccessful uploads
                         reject(error)
-                        console.log(error)
                     }, 
                     () => {
                         // Handle successful uploads on complete
@@ -166,7 +163,6 @@ function CreateListing() {
                 .catch((error) => {
                     setLoading(false)
                     toast.error("Images not uploaded")
-                    console.log(error)
                     return
             }
         )
@@ -174,6 +170,7 @@ function CreateListing() {
         const formDataCopy = {
             ...formData,
             imgUrls, //add additional info
+            geolocation,
             timestamp: serverTimestamp(),
             userRef: auth.currentUser.uid
         }
@@ -298,15 +295,15 @@ function CreateListing() {
                     </button>
                 </div>
                 <p className="text-lg mt-6 font-semibold">Address</p>
-                <input 
-                    ref={ref} 
-                    style={{ width: "90%" }} 
+                <textarea 
                     type="text" 
                     id="address" 
                     value={address}  
-                    onChange={onChange}
+                    onChange={onChange} 
+                    placeholder="Address" 
+                    required 
+                    className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-slate-600 mb-6"
                 />
-
                 {!geolocationEnabled && (
                     <div className="flex space-x-6 justify-start mb-6">
                         <div>

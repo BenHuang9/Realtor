@@ -1,18 +1,19 @@
 import { getAuth, updateProfile } from 'firebase/auth'
-import { doc, updateDoc } from 'firebase/firestore'
-import React, { useState } from 'react'
+import { collection, doc, getDocs, updateDoc, query, where, orderBy, deleteDoc } from 'firebase/firestore'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { db } from '../firebase'
 import { FcHome } from 'react-icons/fc'
-
+import ListingItem from '../components/ListingItem'
 
 function Profile() {
 
   const auth = getAuth()
   const navigate = useNavigate()
   const [changeDetail, setChangeDetail] = useState(false)
-
+  const [listings, setListings] = useState(null)
+  const [loading, setLoading] =useState(true)
   const [formData, setFormData] = useState({
     name: auth.currentUser.displayName,
     email: auth.currentUser.email
@@ -52,6 +53,52 @@ function Profile() {
       toast.error("Could not update the profile Detail")
     }
   }
+
+  useEffect(() => {
+    async function fetchUserListing() {
+
+      const listingRef = collection(db, 'listings')
+      //make a query to only show the collection listings where the userRef === current user id
+      const q = query(
+        listingRef, 
+        where('userRef', '==', auth.currentUser.uid), 
+        orderBy("timestamp", "desc")
+      )
+
+      const querySnap = await getDocs(q)
+      let listings = []
+      querySnap.forEach((doc) =>{
+        return listings.push({
+          id: doc.id,
+          data: doc.data(),
+        })
+      })
+      setListings(listings)
+      setLoading(false)
+    }
+
+    // when the page is loaded, then run this function
+    fetchUserListing();
+  }, [auth.currentUser.uid])
+
+  async function onDelete(listingID){
+    if(window.confirm("Are you sure you want to delete this listing?")){
+      
+      await deleteDoc(doc(db, "listings", listingID))
+      // filter and keep every listing excepting the one with listingID
+      const updatedListings = listings.filter(
+        (listing) => listing.id !== listingID
+      )
+      setListings(updatedListings)
+      toast.success("Successfully deleted the listing")
+    }
+  }
+
+  function onEdit(listingID){
+
+    navigate(`/edit-listing/${listingID}`)
+  }
+
   return (
     <>
       <section className="max-w-6xl mx-auto flex justify-center items-center flex-col">
@@ -104,6 +151,24 @@ function Profile() {
           </form>
         </div>
       </section>
+      <div className="max-w-6xl px-3 mt-6 mx-auto">
+        {!loading && listings.length > 0 && (
+          <>
+            <h2 className="text-2xl text-center font-semibold">My Listings</h2>
+            <ul className="sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 mt-6 mb-6">
+            {listings.map((listing) => (
+              <ListingItem 
+                key={listing.id} 
+                id={listing.id} 
+                listing={listing.data}
+                onDelete={()=> onDelete(listing.id)} //trigger a function get the listing id, and know which one to delete
+                onEdit={()=> onEdit(listing.id)} //trigger a function get the listing id, and know which one to edit
+              />
+            ))}
+            </ul>
+          </>
+        )}
+      </div>
     </>
   )
 }
