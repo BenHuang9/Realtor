@@ -16,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
    <>
+    <main>
     <Router>
         <Header />
         <Routes>
@@ -48,6 +49,7 @@ function App() {
       pauseOnHover
       theme="dark"
     />
+    </main>
    </>
   )
 }
