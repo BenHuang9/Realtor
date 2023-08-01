@@ -101,7 +101,7 @@ function Home() {
               </NavLink>
               <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {offerListings.map(listing => (
-                  <ListingItem key={listing.id} listing={listing.data}/>
+                  <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
                 ))}
               </ul>
             </div>
@@ -118,7 +118,7 @@ function Home() {
               </NavLink>
               <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {rentListings.map(listing => (
-                  <ListingItem key={listing.id} listing={listing.data}/>
+                  <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
                 ))}
               </ul>
             </div>
@@ -135,7 +135,7 @@ function Home() {
               </NavLink>
               <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
                 {sellListings.map(listing => (
-                  <ListingItem key={listing.id} listing={listing.data}/>
+                  <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
                 ))}
               </ul>
             </div>
