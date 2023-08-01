@@ -4,7 +4,8 @@ import { db } from '../firebase'
 import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 import { NavLink } from 'react-router-dom'
 import ListingItem from '../components/ListingItem'
-
+import HeroImg from '../asset/images/homeHero.jpg'
+import { MdLocationOn } from "react-icons/md"
 
 function Home() {
   const [offerListings, setOfferListings] = useState(null)
@@ -89,8 +90,30 @@ function Home() {
 
   return (
     <>
-    <div>
-      <Slider />
+    
+      <div className="bg-[#131110]">
+        <div className="lg:h-[80vh] flex flex-wrap-reverse justify-around items-center max-w-[1440px] mx-auto p-8 gap-4">
+          <div className="text-white">
+            <h1 className=" text-[2rem] leading-[2rem] lg:text-[3.8rem] lg:leading-[4rem] font-bold">Discover<br/> 
+                Most Suitable<br/> 
+                Property
+            </h1>
+            <p className="text-[#8c8b8b] text-xs md:text-sm py-7">Find a variety of properties that suit you very easily<br/>
+              Forget all difficulties in finding a residence for you
+            </p>
+            <form className="flex items-center bg-white rounded justify-between px-2 py-1">
+              <div className="flex items-center w-full">
+                <MdLocationOn className="text-blue-800 text-2xl"/>
+                <input type="search" className="text-black w-full border-none focus:ring-0"/>
+              </div>
+              <button className=" bg-blue-600 p-2 rounded bg-gradient-to-r from-[#4066ff] to-blue-500">Search</button>
+            </form>
+          </div>
+          <div>
+            <img src={HeroImg} alt="home hero image" className=" h-[450px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 border-white/[.12]"/>
+          </div>
+        </div>
+      </div>
       <div>
         {offerListings && offerListings.length > 0 && (
           <div className="max-w-6xl mx-auto pt-4 space-y-6">
@@ -142,8 +165,6 @@ function Home() {
           </div>
         )}
       </div>
-    </div>
-   
    </>
   )
 }
