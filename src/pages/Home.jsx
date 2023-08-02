@@ -1,49 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import Slider from '../components/Slider'
 import { db } from '../firebase'
 import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 import { NavLink } from 'react-router-dom'
 import ListingItem from '../components/ListingItem'
 import HeroImg from '../asset/images/homeHero.jpg'
+import OurGoal from '../asset/images/ourGoal.jpg'
 import { MdLocationOn } from "react-icons/md"
+import CountUp from 'react-countup'
+
 
 function Home() {
-  const [offerListings, setOfferListings] = useState(null)
-
-
-  useEffect(()=>{
-    async function fetchListings(){
-
-      //get the reference
-      try{
-        const listingsRef = collection(db, "listings")
-        const q = query(listingsRef, where("offer", "==", true), orderBy("timestamp", "desc"), limit(4))
-        const querySnap = await getDocs(q)
-        const listings =[]
-        querySnap.forEach((doc)=>{
-          return listings.push({
-            id: doc.id,
-            data: doc.data(),
-          })
-        })
-        setOfferListings(listings)
-        // console.log(listings)
-      }catch(error){
-        console.log(error)
-      }
-    }
-    fetchListings()
-  },[])
 
   //show rent list
-  const [rentListings, setRentListings] = useState(null)
+  const [recentListings, setRecentListings] = useState(null)
   useEffect(()=>{
     async function fetchListings(){
-
       //get the reference
       try{
         const listingsRef = collection(db, "listings")
-        const q = query(listingsRef, where("type", "==", "rent"), orderBy("timestamp", "desc"), limit(4))
+        const q = query(listingsRef, orderBy("timestamp", "desc"), limit(8))
         const querySnap = await getDocs(q)
         const listings =[]
         querySnap.forEach((doc)=>{
@@ -52,33 +27,7 @@ function Home() {
             data: doc.data(),
           })
         })
-        setRentListings(listings)
-        // console.log(listings)
-      }catch(error){
-        console.log(error)
-      }
-    }
-    fetchListings()
-  },[])
-
-  //show rent list
-  const [sellListings, setSellListings] = useState(null)
-  useEffect(()=>{
-    async function fetchListings(){
-
-      //get the reference
-      try{
-        const listingsRef = collection(db, "listings")
-        const q = query(listingsRef, where("type", "==", "sell"), orderBy("timestamp", "desc"), limit(4))
-        const querySnap = await getDocs(q)
-        const listings =[]
-        querySnap.forEach((doc)=>{
-          return listings.push({
-            id: doc.id,
-            data: doc.data(),
-          })
-        })
-        setSellListings(listings)
+        setRecentListings(listings)
         // console.log(listings)
       }catch(error){
         console.log(error)
@@ -91,10 +40,11 @@ function Home() {
   return (
     <>
     
-      <div className="bg-[#131110]">
+      <div className="bg-[#131110] homeBanner">
         <div className="lg:h-[80vh] flex flex-wrap-reverse justify-around items-center max-w-[1440px] mx-auto p-8 gap-4">
           <div className="text-white">
-            <h1 className=" text-[2rem] leading-[2rem] lg:text-[3.8rem] lg:leading-[4rem] font-bold">Discover<br/> 
+            <h1 className=" text-[2rem] leading-[2rem] lg:text-[3.8rem] lg:leading-[4rem] font-bold">
+                Discover<br/> 
                 Most Suitable<br/> 
                 Property
             </h1>
@@ -110,60 +60,91 @@ function Home() {
             </form>
           </div>
           <div>
-            <img src={HeroImg} alt="home hero image" className=" h-[450px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 border-white/[.12]"/>
+            <img src={HeroImg} alt="home hero image" className=" h-[450px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 border-white/[.12]" data-aos="fade-left" data-aos-once="true" data-aos-duration="2000"/>
           </div>
         </div>
       </div>
-      <div>
-        {offerListings && offerListings.length > 0 && (
-          <div className="max-w-6xl mx-auto pt-4 space-y-6">
-            <div>
-              <h2 className="px-3 text-2xl my-6 font-semibold">Recent Offer</h2>
-              <NavLink to="/offers" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out"> 
-                show more offer
-              </NavLink>
-              <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                {offerListings.map(listing => (
-                  <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
-                ))}
-              </ul>
+
+      <div className='ourGoal py-10'>
+        <div className="flex flex-wrap-reverse justify-start lg:justify-around items-center max-w-[1440px] mx-auto p-8 gap-4">
+          <div className="lg:w-[50%]">
+            <h2 className="text-[3rem] lg:text-[3.8rem] leading-[4rem] font-bold mb-6">
+              Helping You Discover Your Ideal House With Us
+            </h2>
+            <p className="lg:w-[90%]">
+              We promise that we provide high-quality listings, and help you discover the perfect place to call home
+              {/* List your property for free on Zillow open up a world of possibilities to connect with potential renters/buyer who are eagerly searching for a place like yours. */}
+              </p>
+            <div className="py-2">
+              <CountUp start={0} end={8000} enableScrollSpy={true} scrollSpyOnce={true}>
+                {({ countUpRef}) => (
+                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-green-800"/>
+                )}
+              </CountUp>
+              <p className=" text-xl">Customer satisfaction with our service</p>
+            </div>
+            <div className="py-2">
+            <CountUp start={0} end={10000} enableScrollSpy={true} scrollSpyOnce={true}>
+                {({ countUpRef}) => (
+                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-green-800"/>
+                )}
+              </CountUp>
+              <p className=" text-xl">The number of successful house deals</p>
+            </div>
+            <div className="py-2">
+            <CountUp start={0} end={15000} enableScrollSpy={true} scrollSpyOnce={true}>
+                {({ countUpRef}) => (
+                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-green-800"/>
+                )}
+              </CountUp>
+              <p className=" text-xl">The best properties are listing</p>
             </div>
           </div>
-        )}
+          <div>
+            <img src={OurGoal} alt="our goal image" className="h-[560px]"/>
+          </div>
+        </div>
       </div>
-      <div>
-        {rentListings && rentListings.length > 0 && (
-          <div className="max-w-6xl mx-auto pt-4 space-y-6">
-            <div>
-              <h2 className="px-3 text-2xl my-6 font-semibold">Recent Rent</h2>
-              <NavLink to="/category/rent" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out"> 
-                show more for rent
-              </NavLink>
-              <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                {rentListings.map(listing => (
-                  <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
-                ))}
-              </ul>
-            </div>
+
+      <div className='Listing py-10'>
+        <div className="max-w-[1440px] mx-auto p-8">
+          <div className="text-center">
+            <h2 className="text-[3rem] lg:text-[3.8rem] leading-[4rem] font-bold mb-6">Recent Property Listed</h2>
+            <p>Take a deep dive and browse homes for sale/rent, original neighborhood photos and local insights to find what is right for you.</p>
           </div>
-        )}
+          <div>
+            {recentListings && recentListings.length > 0 && (
+              <div className=" mx-auto pt-4 space-y-6">
+                <div>
+                  <NavLink to="/category/sell" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out"> 
+                    show more for sale
+                  </NavLink>
+                  <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+                    {recentListings.map(listing => (
+                      <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-      <div>
-        {sellListings && sellListings.length > 0 && (
-          <div className="max-w-6xl mx-auto pt-4 space-y-6">
-            <div>
-              <h2 className="px-3 text-2xl my-6 font-semibold">Recent Sale</h2>
-              <NavLink to="/category/sell" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out"> 
-                show more for sale
-              </NavLink>
-              <ul className='sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-                {sellListings.map(listing => (
-                  <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
-                ))}
-              </ul>
-            </div>
+
+      <div className="bg-green-600 p-8">
+        <div className="max-w-[1440px] mx-auto p-8">
+          <div className="md:text-center text-white">
+            <h2 className="text-[1.75rem] leading-8 lg:text-[2rem] lg:leading-[4rem] font-bold mb-6">Embark on a rewarding journey as a landlord with unparalleled ease.</h2>
+            <p>
+              Create your rental lease using our online lease builder.
+              Let you list your property where millions of renters search each month.
+            </p>
+            
+            <button className="text-black mt-10 border border-green-600 rounded bg-white hover:bg-green-800 hover:text-white">
+              <NavLink to="/sign-in" className="py-5 px-8 block">List Your Property</NavLink>
+            </button>
           </div>
-        )}
+        </div>
       </div>
    </>
   )
