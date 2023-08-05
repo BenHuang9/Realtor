@@ -153,8 +153,8 @@ function Home() {
             <h2 className="text-[3rem] lg:text-[3.5rem] leading-[4rem] font-bold mb-6">We Make Process Simple</h2>
             <p>Whether you’re buying or selling, we’ll make the process simple. We are committed to providing our clients with a high level of service and information, while providing you with an exceptional experience.</p>
           </div>
-          <div className='grid grid-cols-3 gap-5 mt-10'>
-            <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-offset="800">
+          <div className='grid lg:grid-cols-3 gap-5 mt-10'>
+            <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" >
               <BsFillHouseAddFill className=" text-[4rem] mb-5"/>
               <h3 className="text-[1.75rem] font-semibold mb-2">Buy a property</h3>
               <p>We can find a property for the price range that fits your needs. We will help you to find the most suitable bank, prepare loan application organize an approval process and finally close on the property.</p>
@@ -164,7 +164,7 @@ function Home() {
                 </button>
               </div>
             </div>
-            <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-offset="800" data-aos-delay="50">
+            <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-delay="50">
               <BsFillHouseAddFill className=" text-[4rem] mb-5"/>
               <h3 className="text-[1.75rem] font-semibold mb-2">Sell a property</h3>
               <p>We will take care of all paperwork, advertising, and organizing of open houses, showings and negotiations. Our experienced brokers will make sure that you get the highest price possible for your property.</p>
@@ -174,7 +174,7 @@ function Home() {
                 </button>
               </div>
             </div>
-            <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-offset="800" data-aos-delay="100">
+            <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up"  data-aos-delay="100">
               <BsFillHouseAddFill className=" text-[4rem] mb-5"/>
               <h3 className="text-[1.75rem] font-semibold mb-2">Rent a property</h3>
               <p>Find your new apartment or house in a safe and fast way. We will take care of the paperwork. You focus on your move to a new city. We are a boutique real estate firm with a distinct focus on customer service.</p>
