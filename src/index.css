@@ -13,3 +13,27 @@ html::-webkit-scrollbar{
 html{
     scrollbar-width: none;
 }
+
+.profile-list button[aria-selected="true"]{
+    border-bottom: 2px solid red;
+}
+
+.profile-list button{
+    padding-bottom: 1rem;
+}
+
+@media(min-width:1024px){
+    .profile-list button{
+        padding-bottom: 0;
+    }
+
+    .profile-list button[aria-selected="true"]{
+        background-color: #BF974F;
+        padding: 1.5rem 2rem;
+        border-radius: 99rem;
+        color: white;
+        border-bottom: none;
+    }
+
+  
+}
