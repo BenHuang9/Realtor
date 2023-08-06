@@ -45,7 +45,7 @@ function Home() {
     <section className="bg-[#131110] homeBanner">
         <div className="lg:h-[80vh] flex flex-wrap-reverse justify-around items-center max-w-[1440px] mx-auto p-8 gap-4">
           <div className="text-white">
-            <h1 className=" text-[2rem] leading-[2rem] lg:text-[3.8rem] lg:leading-[4rem] font-bold">
+            <h1 className=" text-[2rem] leading-[2rem] md:text-[2.5rem] md:leading-[3rem] lg:text-[3.8rem] lg:leading-[4rem] font-bold">
                 Discover<br/> 
                 Most Suitable<br/> 
                 Property
@@ -72,7 +72,7 @@ function Home() {
         <div className="max-w-[1440px] mx-auto p-8">
           <div>
             <span className="text-[#BF974F] font-semibold uppercase block mb-3">Our Service</span>
-            <h2 className="text-[3rem] lg:text-[3.5rem] leading-[4rem] font-bold mb-6">We Make Process Simple</h2>
+            <h2 className="text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] lg:leading-[3.8rem] font-bold mb-6">We Make Process Simple</h2>
             <p className="lg:w-[50%]">Whether you’re buying or selling, we’ll make the process simple. We are committed to providing our clients with a high level of service and information, while providing you with an exceptional experience.</p>
           </div>
           <div className='grid lg:grid-cols-3 gap-5 mt-10'>
@@ -114,7 +114,7 @@ function Home() {
         <div className="max-w-[1440px] mx-auto p-8">
           <div>
             <span className="text-[#BF974F] font-semibold uppercase block mb-3">Recent Properties</span>
-            <h2 className="text-[3rem] lg:text-[3.5rem] leading-[4rem] font-bold mb-6">Explore the latest<br/> properties available</h2>
+            <h2 className="text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] lg:leading-[3.8rem] font-bold mb-6">Explore the latest<br/> properties available</h2>
           </div>
           <div>
             {recentListings && recentListings.length > 0 && (
@@ -123,7 +123,7 @@ function Home() {
                   <NavLink to="/category/sell" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out"> 
                     show more for sale
                   </NavLink>
-                  <ul className='sm:grid md:grid-cols-2 lg:grid-cols-3 gap-5'>
+                  <ul className='gap-5 grid md:grid-cols-2 lg:grid-cols-3 mt-6' >
                     {recentListings.map(listing => (
                       <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
                     ))}
@@ -138,8 +138,8 @@ function Home() {
       <section className='ourGoal py-10'>
         <div className="flex flex-wrap-reverse justify-start lg:justify-between items-center max-w-[1440px] mx-auto p-8 gap-4">
           <div className="lg:w-[50%]">
-            <span className="text-[#BF974F] font-semibold uppercase block mb-3">Our Service</span>
-            <h2 className="text-[3rem] lg:text-[3.5rem] leading-[4rem] font-bold mb-6">
+            <span className="text-[#BF974F] font-semibold uppercase block mb-3">Our Goal</span>
+            <h2 className="text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] lg:leading-[3.8rem] font-bold mb-6">
               Helping You Discover Your Ideal House With Us
             </h2>
             <p className="lg:w-[90%]">

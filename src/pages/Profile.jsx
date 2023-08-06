@@ -133,7 +133,7 @@ function Profile() {
                   
                 </div>
                   <ul className="grid md:grid-cols-2 mt-6 mb-6 gap-5">
-                    <li className=" border-2 border-dashed flex justify-center items-center">
+                    <li className=" border-2 border-dashed text-gray-400 flex justify-center items-center hover:border-black hover:text-black transition duration-200 ease-in-out">
                       <button type="submit" className="w-full h-[100px] lg:h-full uppercase px-7 py-3 text-sm font-medium">
                         
                         <NavLink to="/create-listing" className="w-full h-full flex justify-center items-center gap-2">
