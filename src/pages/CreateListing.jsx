@@ -499,7 +499,7 @@ function CreateListing() {
                                 onDragOver={handleDragOver}
                                 onDrop={(event) => handleDrop(event)}
                                 onDragLeave={handleDragLeave}
-                                className= {`${dragging ? "border-black" : " "} inline-block flex flex-col justify-center items-center border border-dashed hover:border-black rounded h-[10rem] cursor-pointer text-xl `}>
+                                className= {`${dragging ? "border-black" : " "} flex flex-col justify-center items-center border border-dashed hover:border-black rounded h-[10rem] cursor-pointer text-xl `}>
                                 + 
                                 Click or drag files to upload
                                 <span className="text-gray-600 mt-2 text-sm">Maximum up to 6 images</span>
