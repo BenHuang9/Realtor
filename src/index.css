@@ -22,6 +22,7 @@ html{
     padding-bottom: 1rem;
 }
 
+
 @media(min-width:1024px){
     .profile-list button{
         padding-bottom: 0;

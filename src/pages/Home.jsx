@@ -13,6 +13,10 @@ import CountUp from 'react-countup'
 
 function Home() {
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   //show rent list
   const [recentListings, setRecentListings] = useState(null)
   useEffect(()=>{
