@@ -14,9 +14,9 @@ function CreateListing() {
     // if use google geolocation with bank card set to true
     const auth = getAuth()
     const navigate = useNavigate()
-    const [geolocationEnabled, setGeolocationEnabled] =useState(true)
+    const [geolocationEnabled, setGeolocationEnabled] = useState(true)
     const [dragging, setDragging] = useState(false);
-    const [loading, setLoading] =useState(false)
+    const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         type: "rent",
         property: "condo",
@@ -33,21 +33,21 @@ function CreateListing() {
         latitude: 0,
         longitude: 0,
         images: [],
-        geolocation: {lat: 0, lng: 0}
+        geolocation: { lat: 0, lng: 0 }
     })
 
     // Code below is the same as formData.type, formData.name
     const {
-        type, 
+        type,
         property,
-        name, 
-        bedrooms, 
-        bathrooms, 
-        parking, 
-        furnished, 
-        address, 
-        description, 
-        offer, 
+        name,
+        bedrooms,
+        bathrooms,
+        parking,
+        furnished,
+        address,
+        description,
+        offer,
         regularPrice,
         discountedPrice,
         latitude,
@@ -58,41 +58,41 @@ function CreateListing() {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-      }, []);
+    }, []);
 
     const { ref } = usePlacesWidget({
         apiKey: process.env.REACT_APP_GEOCODE_API_KEY,
         onPlaceSelected: (place) => {
-          console.log(place);
-          console.log(place.formatted_address)
-          geolocation.lat = place.geometry.location.lat()
-          geolocation.lng = place.geometry.location.lng()
-          setFormData((prevState) => ({
-            ...prevState,
-            address: place.formatted_address,
-            geolocation,lat: place.geometry.location.lat(),
-            geolocation,lng: place.geometry.location.lng(),
-        }))
+            console.log(place);
+            console.log(place.formatted_address)
+            geolocation.lat = place.geometry.location.lat()
+            geolocation.lng = place.geometry.location.lng()
+            setFormData((prevState) => ({
+                ...prevState,
+                address: place.formatted_address,
+                geolocation, lat: place.geometry.location.lat(),
+                geolocation, lng: place.geometry.location.lng(),
+            }))
         },
         options: {
-          types: ["address"],
-          componentRestrictions: { country: "ca" },
-          
+            types: ["address"],
+            componentRestrictions: { country: "ca" },
+
         },
-        
-      });
 
-      console.log(geolocation)
+    });
 
-    function onChange(e){
+    console.log(geolocation)
+
+    function onChange(e) {
         let boolean = null
-        if(e.target.value === "true"){
+        if (e.target.value === "true") {
             boolean = true
         }
-        if(e.target.value === "false"){
+        if (e.target.value === "false") {
             boolean = false
         }
-        if(e.target.files){
+        if (e.target.files) {
             const files = e.target.files;
             const newImages = [...images, ...files]; // Add the new files to the array
             setFormData({
@@ -101,7 +101,7 @@ function CreateListing() {
             });
         }
 
-        if(!e.target.files){
+        if (!e.target.files) {
             setFormData((prevState) => ({
                 ...prevState,
                 [e.target.id]: boolean ?? e.target.value  //explanation at 8:24 on Youtube
@@ -114,57 +114,57 @@ function CreateListing() {
         const newImages = [...formData.images];
         newImages.splice(index, 1);
         setFormData({
-          ...formData,
-          images: newImages,
-        });
-      };
-    
-      const handleDragOver = (event) => {
-        event.preventDefault();
-        setDragging(true);
-      };
-
-       const handleDrop = (event) => {
-            event.preventDefault();
-            const files = event.dataTransfer.files;
-            const newImages = [...formData.images, ...files];
-            setFormData({
             ...formData,
             images: newImages,
-            });
-            setDragging(false);
-        };
+        });
+    };
 
-        const handleDragLeave = () => {
-            setDragging(false);
-          };
+    const handleDragOver = (event) => {
+        event.preventDefault();
+        setDragging(true);
+    };
 
-    async function handleCreateListing(e){
+    const handleDrop = (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        const newImages = [...formData.images, ...files];
+        setFormData({
+            ...formData,
+            images: newImages,
+        });
+        setDragging(false);
+    };
+
+    const handleDragLeave = () => {
+        setDragging(false);
+    };
+
+    async function handleCreateListing(e) {
         e.preventDefault()
 
         if (formData.images.length === 0) {
             toast.error('Please select at least one image.');
             return;
         }
-          
+
         setLoading(true)
 
-        if(discountedPrice >= regularPrice){
+        if (discountedPrice >= regularPrice) {
             setLoading(false)
             toast.error("Discount price needs to be less than regular price.")
             return
         }
 
         //check if images are more than 6 not working
-        if(images.length > 6){
+        if (images.length > 6) {
             setLoading(false)
             toast.error("Only 6 images is allowed!")
             return
         }
-        
 
 
-        async function storeImage(image){
+
+        async function storeImage(image) {
             return new Promise((resolve, reject) => {
 
                 const storage = getStorage();
@@ -172,26 +172,26 @@ function CreateListing() {
                 const storageRef = storRef(storage, filename)
                 const uploadTask = uploadBytesResumable(storageRef, image)
 
-                uploadTask.on('state_changed', 
+                uploadTask.on('state_changed',
                     (snapshot) => {
                         // Observe state change events such as progress, pause, and resume
                         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                         console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
-                        case 'paused':
-                            console.log('Upload is paused');
-                            break;
-                        case 'running':
-                            console.log('Upload is running');
-                            break;
+                            case 'paused':
+                                console.log('Upload is paused');
+                                break;
+                            case 'running':
+                                console.log('Upload is running');
+                                break;
                         }
-                    }, 
+                    },
                     (error) => {
                         // Handle unsuccessful uploads
                         reject(error)
                         console.log(error)
-                    }, 
+                    },
                     () => {
                         // Handle successful uploads on complete
                         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
@@ -199,20 +199,20 @@ function CreateListing() {
                             resolve(downloadURL);
                         });
                     }
-                    );
-           })
+                );
+            })
         }
 
         const imgUrls = await Promise.all(
             [...images]
                 .map((image) => storeImage(image)))
-                .catch((error) => {
-                    setLoading(false)
-                    toast.error("Images not uploaded")
-                    console.log(error)
-                    return
+            .catch((error) => {
+                setLoading(false)
+                toast.error("Images not uploaded")
+                console.log(error)
+                return
             }
-        )
+            )
 
         const formDataCopy = {
             ...formData,
@@ -231,11 +231,11 @@ function CreateListing() {
         navigate(`/category/${formDataCopy.type}/${docRef.id}`)
     }
 
-   
 
-    
+
+
     // if loading is true, trigger the spinner component
-    if(loading){
+    if (loading) {
         return <Spinner />
     }
 
@@ -247,19 +247,19 @@ function CreateListing() {
                 <form>
                     <p className="text-lg mt-6 font-semibold">Sell / Rent</p>
                     <div className="flex justify-between">
-                        <button 
-                            type="button" 
-                            id="type" 
-                            value="sell" 
-                            onClick={onChange} 
+                        <button
+                            type="button"
+                            id="type"
+                            value="sell"
+                            onClick={onChange}
                             className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${type === "sell" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
                             Sell
                         </button>
-                        <button 
-                            type="button" 
-                            id="type" 
-                            value="rent" 
-                            onClick={onChange} 
+                        <button
+                            type="button"
+                            id="type"
+                            value="rent"
+                            onClick={onChange}
                             className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${type === "rent" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
                             Rent
                         </button>
@@ -267,53 +267,53 @@ function CreateListing() {
                     <div>
                         <p className="text-lg mt-6 font-semibold">Property Type</p>
                         <div className="flex justify-between">
-                        <button 
-                            type="button" 
-                            id="property" 
-                            value="condo" 
-                            onClick={onChange} 
-                            className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "condo" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
-                            Condo
-                        </button>
-                        <button 
-                            type="button" 
-                            id="property" 
-                            value="house" 
-                            onClick={onChange} 
-                            className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "house" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
-                            House
-                        </button>
-                        <button 
-                            type="button" 
-                            id="property" 
-                            value="apartment" 
-                            onClick={onChange} 
-                            className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "apartment" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
-                            Apartment
-                        </button>
-                    </div>
+                            <button
+                                type="button"
+                                id="property"
+                                value="condo"
+                                onClick={onChange}
+                                className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "condo" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
+                                Condo
+                            </button>
+                            <button
+                                type="button"
+                                id="property"
+                                value="house"
+                                onClick={onChange}
+                                className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "house" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
+                                House
+                            </button>
+                            <button
+                                type="button"
+                                id="property"
+                                value="apartment"
+                                onClick={onChange}
+                                className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "apartment" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
+                                Apartment
+                            </button>
+                        </div>
                     </div>
                     <div>
                         <p className="text-lg mt-6 font-semibold">Title</p>
-                        <input 
-                            type="text" 
-                            id="name" 
-                            value={name}  
-                            onChange={onChange} 
-                            placeholder="name" 
-                            maxLength="32" 
-                            minLength="10" 
-                            required 
+                        <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={onChange}
+                            placeholder="name"
+                            maxLength="32"
+                            minLength="10"
+                            required
                             className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 mb-6"
                         />
                     </div>
                     <div className="flex space-x-6 justify-start">
                         <div>
                             <p className="text-lg font-semibold">Bedrooms</p>
-                            <input 
-                                type="number" 
-                                id="bedrooms" 
-                                value={bedrooms} 
+                            <input
+                                type="number"
+                                id="bedrooms"
+                                value={bedrooms}
                                 onChange={onChange}
                                 min="1"
                                 max="50"
@@ -323,10 +323,10 @@ function CreateListing() {
                         </div>
                         <div>
                             <p className="text-lg font-semibold">Bathrooms</p>
-                            <input 
-                                type="number" 
-                                id="bathrooms" 
-                                value={bathrooms} 
+                            <input
+                                type="number"
+                                id="bathrooms"
+                                value={bathrooms}
                                 onChange={onChange}
                                 min="1"
                                 max="50"
@@ -337,65 +337,65 @@ function CreateListing() {
                     </div>
                     <p className="text-lg mt-6 font-semibold">Parking Spot</p>
                     <div className="flex justify-between">
-                        <button 
-                            type="button" 
-                            id="parking" 
-                            value={true} 
-                            onClick={onChange} 
+                        <button
+                            type="button"
+                            id="parking"
+                            value={true}
+                            onClick={onChange}
                             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!parking ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
                             Yes
                         </button>
-                        <button 
-                            type="button" 
-                            id="parking" 
+                        <button
+                            type="button"
+                            id="parking"
                             value={false}
-                            onClick={onChange} 
+                            onClick={onChange}
                             className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${parking ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
                             No
                         </button>
                     </div>
                     <p className="text-lg mt-6 font-semibold">Furnished</p>
                     <div className="flex justify-between">
-                        <button 
-                            type="button" 
-                            id="furnished" 
-                            value={true} 
-                            onClick={onChange} 
+                        <button
+                            type="button"
+                            id="furnished"
+                            value={true}
+                            onClick={onChange}
                             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!furnished ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
                             Yes
                         </button>
-                        <button 
-                            type="button" 
-                            id="furnished" 
+                        <button
+                            type="button"
+                            id="furnished"
                             value={false}
-                            onClick={onChange} 
+                            onClick={onChange}
                             className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${furnished ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
                             No
                         </button>
                     </div>
                     <div className="mb-6">
                         <p className="text-lg mt-6 font-semibold">Address</p>
-                        <input 
-                            ref={ref} 
-                            style={{ width: "90%" }} 
-                            type="text" 
-                            id="address" 
-                            value={address}  
+                        <input
+                            ref={ref}
+                            style={{ width: "90%" }}
+                            type="text"
+                            id="address"
+                            value={address}
                             onChange={onChange}
                             className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0"
                         />
                     </div>
-                    
+
 
                     {!geolocationEnabled && (
                         <div className="flex space-x-6 justify-start mb-6">
                             <div>
                                 <p className="text-lg font-semibold">Latitude</p>
-                                <input 
-                                    type="number" 
-                                    id="latitude" 
-                                    value={latitude} 
-                                    onChange={onChange} 
+                                <input
+                                    type="number"
+                                    id="latitude"
+                                    value={latitude}
+                                    onChange={onChange}
                                     required
                                     min="-90"
                                     max="90"
@@ -404,11 +404,11 @@ function CreateListing() {
                             </div>
                             <div>
                                 <p className="text-lg font-semibold">Longitude</p>
-                                <input 
-                                    type="number" 
-                                    id="longitude" 
-                                    value={longitude} 
-                                    onChange={onChange} 
+                                <input
+                                    type="number"
+                                    id="longitude"
+                                    value={longitude}
+                                    onChange={onChange}
                                     required
                                     min="-180"
                                     max="180"
@@ -418,30 +418,30 @@ function CreateListing() {
                         </div>
                     )}
                     <p className="text-lg font-semibold">Description</p>
-                    <textarea 
-                        type="text" 
-                        id="description" 
-                        value={description}  
-                        onChange={onChange} 
-                        placeholder="Description" 
-                        required 
+                    <textarea
+                        type="text"
+                        id="description"
+                        value={description}
+                        onChange={onChange}
+                        placeholder="Description"
+                        required
                         className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 mb-6"
                     />
                     <p className="text-lg font-semibold">Offer</p>
                     <div className="flex justify-between mb-6">
-                        <button 
-                            type="button" 
-                            id="offer" 
-                            value={true} 
-                            onClick={onChange} 
+                        <button
+                            type="button"
+                            id="offer"
+                            value={true}
+                            onClick={onChange}
                             className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
                             Yes
                         </button>
-                        <button 
-                            type="button" 
-                            id="offer" 
+                        <button
+                            type="button"
+                            id="offer"
                             value={false}
-                            onClick={onChange} 
+                            onClick={onChange}
                             className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
                             No
                         </button>
@@ -450,8 +450,8 @@ function CreateListing() {
                         <div>
                             <p className="text-lg font-semibold">Regular Price</p>
                             <div className="flex w-full justify-center items-center space-x-6">
-                                <input 
-                                    type="number" 
+                                <input
+                                    type="number"
                                     id="regularPrice"
                                     value={regularPrice}
                                     onChange={onChange}
@@ -468,13 +468,13 @@ function CreateListing() {
                             </div>
                         </div>
                     </div>
-                    { offer &&
+                    {offer &&
                         <div className="flex items-center mb-6">
                             <div>
                                 <p className="text-lg font-semibold">Discount Price</p>
                                 <div className="flex w-full justify-center items-center space-x-6">
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         id="discountedPrice"
                                         value={discountedPrice}
                                         onChange={onChange}
@@ -495,31 +495,31 @@ function CreateListing() {
                     <div className="mb-6">
                         <p className="text-lg font-semibold">Images</p>
                         <div className="py-2">
-                            <label 
-                                for="images" 
+                            <label
+                                for="images"
                                 onDragOver={handleDragOver}
                                 onDrop={(event) => handleDrop(event)}
                                 onDragLeave={handleDragLeave}
-                                className= {`${dragging ? "border-black" : " "} flex flex-col justify-center items-center border border-dashed hover:border-black rounded h-[10rem] cursor-pointer text-xl `}>
-                                + 
+                                className={`${dragging ? "border-black" : " "} flex flex-col justify-center items-center border border-dashed hover:border-black rounded h-[10rem] cursor-pointer text-xl `}>
+                                +
                                 Click or drag files to upload
                                 <span className="text-gray-600 mt-2 text-sm">Maximum up to 6 images</span>
-                                <input 
-                                    type="file" 
-                                    id="images" 
+                                <input
+                                    type="file"
+                                    id="images"
                                     onChange={onChange}
-                                    accept=".jpg, .png, .jpeg" 
-                                    multiple   
+                                    accept=".jpg, .png, .jpeg"
+                                    multiple
                                     className="hidden"
                                 />
                             </label>
                         </div>
-                        
-                       <div className="grid lg:grid-cols-4 gap-5 pb-6">
+
+                        <div className="grid lg:grid-cols-4 gap-5 pb-6">
                             {formData.images.map((file, index) => (
                                 <div key={index} className="uploadImg">
-                                 <img src={URL.createObjectURL(file)} alt={`Uploaded ${index}`} className="h-full object-cover"/>
-                                 <button type="button" onClick={() => handleImageDelete(index)}>Delete</button>
+                                    <img src={URL.createObjectURL(file)} alt={`Uploaded ${index}`} className="h-full object-cover" />
+                                    <button type="button" onClick={() => handleImageDelete(index)}>Delete</button>
                                 </div>
                             ))}
                         </div>
