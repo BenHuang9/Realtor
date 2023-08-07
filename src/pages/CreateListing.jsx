@@ -139,8 +139,9 @@ function CreateListing() {
             setDragging(false);
           };
 
-    async function onSubmit(e){
+    async function handleCreateListing(e){
         e.preventDefault()
+
         if (formData.images.length === 0) {
             toast.error('Please select at least one image.');
             return;
@@ -243,7 +244,7 @@ function CreateListing() {
         <section className="px-2 mx-auto">
             <div className="createList-Wrapper max-w-[1440px] mx-auto p-8">
                 <h1 className="text-3xl mt-6 font-bold">Create a Listing</h1>
-                <form onSubmit={onSubmit}>
+                <form>
                     <p className="text-lg mt-6 font-semibold">Sell / Rent</p>
                     <div className="flex justify-between">
                         <button 
@@ -514,19 +515,16 @@ function CreateListing() {
                             </label>
                         </div>
                         
-                       <div className="grid lg:grid-cols-4 gap-5">
+                       <div className="grid lg:grid-cols-4 gap-5 pb-6">
                             {formData.images.map((file, index) => (
-                                <div
-                                    key={index}
-                                    className="uploadImg"
-                                >
-                                    <img src={URL.createObjectURL(file)} alt={`Uploaded ${index}`} className="h-full object-cover"/>
-                                    <button onClick={() => handleImageDelete(index)}>Delete</button>
+                                <div key={index} className="uploadImg">
+                                 <img src={URL.createObjectURL(file)} alt={`Uploaded ${index}`} className="h-full object-cover"/>
+                                 <button type="button" onClick={() => handleImageDelete(index)}>Delete</button>
                                 </div>
                             ))}
                         </div>
                     </div>
-                    <button type="submit" className="mb-6 w-full px-7 py-3 bg-[#BF974F] text-white font-medium text-sm uppercase rounded shadow-md hover:bg-[#856937] hover:shadow-lg  active:shadow-xl transition duration-200 ease-in-out">Create Listing</button>
+                    <button type="submit" onClick={handleCreateListing} className="mb-6 w-full px-7 py-3 bg-[#BF974F] text-white font-medium text-sm uppercase rounded shadow-md hover:bg-[#856937] hover:shadow-lg  active:shadow-xl transition duration-200 ease-in-out">Create Listing</button>
                 </form>
             </div>
         </section>
