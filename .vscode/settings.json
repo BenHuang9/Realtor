@@ -3,6 +3,7 @@
         "firestore",
         "GEOCODE",
         "toastify",
-        "uuidv"
+        "uuidv",
+        "@tailwind"
     ]
 }
