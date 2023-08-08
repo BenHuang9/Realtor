@@ -139,7 +139,7 @@ function CreateListing() {
         setDragging(false);
     };
 
-    async function handleCreateListing(e) {
+    async function submitListing(e) {
         e.preventDefault()
 
         if (formData.images.length === 0) {
@@ -223,8 +223,6 @@ function CreateListing() {
 
         delete formDataCopy.images
         !formDataCopy.offer && delete formDataCopy.discountedPrice
-        delete formDataCopy.latitude
-        delete formDataCopy.longitude
         const docRef = await addDoc(collection(db, "listings"), formDataCopy)
         setLoading(false)
         toast.success("Listing created.")
@@ -335,152 +333,107 @@ function CreateListing() {
                             />
                         </div>
                     </div>
-                    <p className="text-lg mt-6 font-semibold">Parking Spot</p>
-                    <div className="flex justify-between">
-                        <button
-                            type="button"
-                            id="parking"
-                            value={true}
-                            onClick={onChange}
-                            className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!parking ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                            Yes
-                        </button>
-                        <button
-                            type="button"
-                            id="parking"
-                            value={false}
-                            onClick={onChange}
-                            className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${parking ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                            No
-                        </button>
+                    <div className="parking">
+                        <p className="text-lg mt-6 font-semibold">Parking Spot</p>
+                        <div className="flex justify-between">
+                            <button
+                                type="button"
+                                id="parking"
+                                value={true}
+                                onClick={onChange}
+                                className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!parking ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
+                                Yes
+                            </button>
+                            <button
+                                type="button"
+                                id="parking"
+                                value={false}
+                                onClick={onChange}
+                                className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${parking ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
+                                No
+                            </button>
+                        </div>
                     </div>
-                    <p className="text-lg mt-6 font-semibold">Furnished</p>
-                    <div className="flex justify-between">
-                        <button
-                            type="button"
-                            id="furnished"
-                            value={true}
-                            onClick={onChange}
-                            className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!furnished ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                            Yes
-                        </button>
-                        <button
-                            type="button"
-                            id="furnished"
-                            value={false}
-                            onClick={onChange}
-                            className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${furnished ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                            No
-                        </button>
+                    <div className="furnished">
+                        <p className="text-lg mt-6 font-semibold">Furnished</p>
+                        <div className="flex justify-between">
+                            <button
+                                type="button"
+                                id="furnished"
+                                value={true}
+                                onClick={onChange}
+                                className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!furnished ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
+                                Yes
+                            </button>
+                            <button
+                                type="button"
+                                id="furnished"
+                                value={false}
+                                onClick={onChange}
+                                className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${furnished ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
+                                No
+                            </button>
+                        </div>
                     </div>
-                    <div className="mb-6">
-                        <p className="text-lg mt-6 font-semibold">Address</p>
-                        <input
-                            ref={ref}
-                            style={{ width: "90%" }}
+                    <div className="address">
+                        <div className="mb-6">
+                            <p className="text-lg mt-6 font-semibold">Address</p>
+                            <input
+                                ref={ref}
+                                type="text"
+                                id="address"
+                                value={address}
+                                onChange={onChange}
+                                className="w-[50%] px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0"
+                            />
+                        </div>
+                    </div>
+                    <div className="description">
+                        <p className="text-lg font-semibold">Description</p>
+                        <textarea
                             type="text"
-                            id="address"
-                            value={address}
+                            id="description"
+                            value={description}
                             onChange={onChange}
-                            className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0"
+                            placeholder="Description"
+                            required
+                            className="w-[50%] px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 mb-6"
                         />
                     </div>
-
-
-                    {!geolocationEnabled && (
-                        <div className="flex space-x-6 justify-start mb-6">
-                            <div>
-                                <p className="text-lg font-semibold">Latitude</p>
-                                <input
-                                    type="number"
-                                    id="latitude"
-                                    value={latitude}
-                                    onChange={onChange}
-                                    required
-                                    min="-90"
-                                    max="90"
-                                    className="w-full px-4 py-2 text-lg text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600"
-                                />
-                            </div>
-                            <div>
-                                <p className="text-lg font-semibold">Longitude</p>
-                                <input
-                                    type="number"
-                                    id="longitude"
-                                    value={longitude}
-                                    onChange={onChange}
-                                    required
-                                    min="-180"
-                                    max="180"
-                                    className="w-full px-4 py-2 text-lg text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:bg-white focus:text-gray-700 focus:border-slate-600"
-                                />
-                            </div>
-                        </div>
-                    )}
-                    <p className="text-lg font-semibold">Description</p>
-                    <textarea
-                        type="text"
-                        id="description"
-                        value={description}
-                        onChange={onChange}
-                        placeholder="Description"
-                        required
-                        className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 mb-6"
-                    />
-                    <p className="text-lg font-semibold">Offer</p>
-                    <div className="flex justify-between mb-6">
-                        <button
-                            type="button"
-                            id="offer"
-                            value={true}
-                            onClick={onChange}
-                            className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                            Yes
-                        </button>
-                        <button
-                            type="button"
-                            id="offer"
-                            value={false}
-                            onClick={onChange}
-                            className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                            No
-                        </button>
-                    </div>
-                    <div className="flex items-center mb-6">
-                        <div>
-                            <p className="text-lg font-semibold">Regular Price</p>
-                            <div className="flex w-full justify-center items-center space-x-6">
-                                <input
-                                    type="number"
-                                    id="regularPrice"
-                                    value={regularPrice}
-                                    onChange={onChange}
-                                    min="50"
-                                    max="40000000"
-                                    required
-                                    className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
-                                />
-                                {type === "rent" && (
-                                    <div>
-                                        <p className="text-md w-full whitespace-nowrap">$/Month</p>
-                                    </div>
-                                )}
-                            </div>
+                    <div className="offer">
+                        <p className="text-lg font-semibold">Offer</p>
+                        <div className="flex justify-between mb-6">
+                            <button
+                                type="button"
+                                id="offer"
+                                value={true}
+                                onClick={onChange}
+                                className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
+                                Yes
+                            </button>
+                            <button
+                                type="button"
+                                id="offer"
+                                value={false}
+                                onClick={onChange}
+                                className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
+                                No
+                            </button>
                         </div>
                     </div>
-                    {offer &&
+                    <div className="price">
                         <div className="flex items-center mb-6">
                             <div>
-                                <p className="text-lg font-semibold">Discount Price</p>
+                                <p className="text-lg font-semibold">Regular Price</p>
                                 <div className="flex w-full justify-center items-center space-x-6">
                                     <input
                                         type="number"
-                                        id="discountedPrice"
-                                        value={discountedPrice}
+                                        id="regularPrice"
+                                        value={regularPrice}
                                         onChange={onChange}
                                         min="50"
                                         max="40000000"
-                                        required={offer}
+                                        required
                                         className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
                                     />
                                     {type === "rent" && (
@@ -491,8 +444,33 @@ function CreateListing() {
                                 </div>
                             </div>
                         </div>
-                    }
-                    <div className="mb-6">
+                        {offer &&
+                            <div className="flex items-center mb-6">
+                                <div>
+                                    <p className="text-lg font-semibold">Discount Price</p>
+                                    <div className="flex w-full justify-center items-center space-x-6">
+                                        <input
+                                            type="number"
+                                            id="discountedPrice"
+                                            value={discountedPrice}
+                                            onChange={onChange}
+                                            min="50"
+                                            max="40000000"
+                                            required={offer}
+                                            className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
+                                        />
+                                        {type === "rent" && (
+                                            <div>
+                                                <p className="text-md w-full whitespace-nowrap">$/Month</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div className="mb-6 images">
                         <p className="text-lg font-semibold">Images</p>
                         <div className="py-2">
                             <label
@@ -524,7 +502,7 @@ function CreateListing() {
                             ))}
                         </div>
                     </div>
-                    <button type="submit" onClick={handleCreateListing} className="mb-6 w-full px-7 py-3 bg-[#BF974F] text-white font-medium text-sm uppercase rounded shadow-md hover:bg-[#856937] hover:shadow-lg  active:shadow-xl transition duration-200 ease-in-out">Create Listing</button>
+                    <button type="submit" onClick={submitListing} className="mb-6 w-full px-7 py-3 bg-[#BF974F] text-white font-medium text-sm uppercase rounded shadow-md hover:bg-[#856937] hover:shadow-lg  active:shadow-xl transition duration-200 ease-in-out">Create Listing</button>
                 </form>
             </div>
         </section>
