@@ -9,7 +9,7 @@ import { EffectFade, Autoplay, Navigation } from 'swiper/modules'
 import "swiper/css/bundle"
 import { FaShareAlt, FaBed, FaBath, FaParking, FaChair, FaMapMarkerAlt } from "react-icons/fa"
 import { LiaRulerCombinedSolid } from "react-icons/lia"
-import { MdLocationOn } from "react-icons/md"
+import { MdLocationOn, MdPrint } from "react-icons/md"
 import { getAuth } from 'firebase/auth';
 import Contact from '../components/Contact';
 import ListingItem from '../components/ListingItem';
@@ -207,19 +207,34 @@ function Listing() {
                                 <MdLocationOn className="text-green-700 mr-1 text-xl" />
                                 {listing.address}
                             </p>
-                            <div className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2" onClick={() => {
-                                navigator.clipboard.writeText(window.location.href)
-                                setShareLinkCopied(true)
-                                setTimeout(() => {
-                                    setShareLinkCopied(false)
-                                }, 2000)
-                            }}>
-                                <FaShareAlt className="text-sm text-slate-500" />
-                                <p className="text-xs">Share</p>
-                                {shareLinkCopied &&
-                                    <p className="absolute w-full text-xs text-center -top-3 -right-8 z-10 font-semibold border border-gray-400 bg-white rounded-md">Link Copied</p>
-                                }
+                            <div className="flex gap-2">
+                                <div 
+                                    className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2" 
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(window.location.href)
+                                        setShareLinkCopied(true)
+                                        setTimeout(() => {
+                                            setShareLinkCopied(false)
+                                        }, 2000)
+                                    }}
+                                >
+                                    <FaShareAlt className="text-sm text-slate-500" />
+                                    <p className="text-xs">Share</p>
+                                    {shareLinkCopied &&
+                                        <p className="absolute w-full text-xs text-center -top-3 -right-8 z-10 font-semibold border border-gray-400 bg-white rounded-md">Link Copied</p>
+                                    }
+                                </div>
+                                <div 
+                                    className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2" 
+                                    onClick={() => {
+                                        window.print();
+                                    }}
+                                >
+                                    <MdPrint className=" text-slate-500"/>
+                                    <p className="text-xs">Print</p>
+                                </div>
                             </div>
+
                         </div>
                         <div className="flex justify-start items-center space-x-4 w-[75%] mb-7">
                             <p className='bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md'>For {listing.type === "rent" ? "Rent" : "Sale"}</p>
