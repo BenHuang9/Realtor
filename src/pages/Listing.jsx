@@ -143,13 +143,13 @@ function Listing() {
         autoplay: true,
         smartSpeed: 1000,
         responsive: {
-            400: {
+            320: {
                 items: 1,
             },
-            600: {
+            550: {
                 items: 2,
             },
-            700: {
+            768: {
                 items: 3,
             },
         },
@@ -189,7 +189,7 @@ function Listing() {
                     ))}
                 </Swiper>
 
-                <div className=" max-w-[1440px] lg:flex lg:mx-auto p-8 gap-8 relative">
+                <div className=" max-w-[1440px] lg:flex lg:mx-auto p-8 gap-8 relative ">
                     <div className="propertyInfo w-full basis-9/12 lg:max-w-[75%]">
                         <div className="houseTitle flex flex-wrap items-center justify-between mb-3">
                             <h1 className="text-4xl font-bold ">
@@ -283,7 +283,7 @@ function Listing() {
 
                         <div className="propertyMap rounded-lg shadow-lg p-7 mb-7 bg-white">
                             <h3 className="mb-5 font-semibold">Location</h3>
-                            <div className="w-full h-[250px] md:h-[350px] lg:h-[500px]">
+                            <div className="w-full h-[350px] lg:h-[500px]">
                                 <GoogleMapReact
                                     bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
                                     defaultCenter={defaultProps.center}
