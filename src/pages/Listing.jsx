@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from "swiper"
 import { EffectFade, Autoplay, Navigation } from 'swiper/modules'
 import "swiper/css/bundle"
-import { FaShareAlt, FaBed, FaBath, FaParking, FaChair } from "react-icons/fa"
+import { FaShareAlt, FaBed, FaBath, FaParking, FaChair, FaMapMarkerAlt } from "react-icons/fa"
 import { LiaRulerCombinedSolid } from "react-icons/lia"
 import { MdLocationOn } from "react-icons/md"
 import { getAuth } from 'firebase/auth';
@@ -155,15 +155,19 @@ function Listing() {
         },
     };
 
-    const Marker = ({ text }) => <div className="marker">{text}</div>;
+    const Marker = ({ text }) => (
+        <div className="marker">
+            <FaMapMarkerAlt className="text-2xl text-red-500" />
+        </div>
+    );
 
-    const initialLocation = {
+    const location = {
         lat: 49.1649021,
         lng: -123.1705467,
     };
 
     const defaultProps = {
-        center: initialLocation,
+        center: location,
         zoom: 15, // Adjust the zoom level as needed
     };
 
@@ -225,11 +229,9 @@ function Listing() {
                         </div>
                         <div className="propertyOverview rounded-lg shadow-lg p-7 mb-7 bg-white">
                             <h3 className="mb-5 font-semibold">Overview</h3>
-                            {/* <ul className="flex flex-row content-center flex-wrap items-center text-sm justify-start gap-5 gap-x-8"> */}
                             <ul className="grid grid-cols-[repeat(auto-fit,_minmax(100px,_1fr))] gap-5 justify-items-center">
                                 <li>
-                                    <p className="m-auto mb-1">Updated On:</p>
-
+                                    <p className="m-auto">Updated On:</p>
                                     {listing.timestamp &&
                                         new Date(listing.timestamp.toDate()).toLocaleString("en-US", {
                                             month: "short",
@@ -279,17 +281,21 @@ function Listing() {
                             </GoogleMapReact>
                         </div> */}
 
-                        <div style={{ height: '500px', width: '100%' }}>
-                            <GoogleMapReact
-                                bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
-                                defaultCenter={defaultProps.center}
-                                defaultZoom={defaultProps.zoom}
-                                draggable={true}
-                            >
-                                {/* Add a marker for the specified location */}
-                                <Marker lat={initialLocation.lat} lng={initialLocation.lng} text="Your Location" />
-                            </GoogleMapReact>
+                        <div className="propertyMap rounded-lg shadow-lg p-7 mb-7 bg-white">
+                            <h3 className="mb-5 font-semibold">Location</h3>
+                            <div className="w-full h-[250px] md:h-[350px] lg:h-[500px]">
+                                <GoogleMapReact
+                                    bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
+                                    defaultCenter={defaultProps.center}
+                                    defaultZoom={defaultProps.zoom}
+                                    className="rounded-lg"
+                                >
+                                    {/* Add a marker for the specified location */}
+                                    <Marker lat={location.lat} lng={location.lng} text="Your Location" />
+                                </GoogleMapReact>
+                            </div>
                         </div>
+
 
                         {relatedListings && relatedListings.length > 0 && (
                             <div className="similarListings mb-7">
