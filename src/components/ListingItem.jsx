@@ -7,7 +7,7 @@ import {  LiaBathSolid, LiaRulerCombinedSolid } from "react-icons/lia"
 
 function ListingItem({listing, id, onEdit, onDelete}) {
   return (
-    <li className="listingCard bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-200 ease-in-out relative">
+    <li className="listingCard bg-white flex flex-col justify-between items-center shadow-md hover:shadow-xl rounded-md overflow-hidden transition-shadow duration-200 ease-in-out mb-4 relative">
         <NavLink to={`/category/${listing.type}/${id}`} className="contents"> 
             <div className="w-full overflow-hidden">
                 <img 

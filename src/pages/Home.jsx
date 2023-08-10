@@ -127,7 +127,7 @@ function Home() {
                   <NavLink to="/category/sell" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out"> 
                     show more for sale
                   </NavLink>
-                  <ul className='gap-5 grid md:grid-cols-2 lg:grid-cols-3 mt-6' >
+                  <ul className='gap-3 gap-y-0 grid md:grid-cols-2 lg:grid-cols-3 mt-6' >
                     {recentListings.map(listing => (
                       <ListingItem key={listing.id} id={listing.id} listing={listing.data}/>
                     ))}
