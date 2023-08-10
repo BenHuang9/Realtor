@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { db } from '../firebase'
-import { collection, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
+import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore'
 import { NavLink } from 'react-router-dom'
 import ListingItem from '../components/ListingItem'
 import HeroImg from '../asset/images/homeHero.jpg'
@@ -16,7 +16,7 @@ function Home() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
   //show rent list
   const [recentListings, setRecentListings] = useState(null)
   useEffect(()=>{

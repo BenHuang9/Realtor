@@ -35,6 +35,13 @@ html{
         color: white;
         border-bottom: none;
     }
+}
 
-  
+.listingCard:hover img{
+    transform: scale(1.1);
+}
+
+.owl-prev span,
+.owl-next span{
+    font-size: 28px;
 }

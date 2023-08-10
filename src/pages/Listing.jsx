@@ -1,135 +1,333 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
-import { doc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import Spinner from '../components/Spinner';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from "swiper"
 import { EffectFade, Autoplay, Navigation } from 'swiper/modules'
 import "swiper/css/bundle"
-import { FaShare, FaBed, FaBath, FaParking, FaChair } from "react-icons/fa"
+import { FaShareAlt, FaBed, FaBath, FaParking, FaChair } from "react-icons/fa"
+import { LiaRulerCombinedSolid } from "react-icons/lia"
 import { MdLocationOn } from "react-icons/md"
 import { getAuth } from 'firebase/auth';
 import Contact from '../components/Contact';
+import ListingItem from '../components/ListingItem';
+import OwlCarousel from 'react-owl-carousel';
+import GoogleMapReact from 'google-map-react';
+
 
 function Listing() {
 
     const auth = getAuth()
     const params = useParams()
-    const [listing, setListing] = useState(null)  
-    const [loading, setLoading] = useState(true)  
-    const [shareLinkCopied,setShareLinkCopied] = useState(false)
-    const [contactLandlord, setContactLandlord] = useState(false)
-
+    const [listing, setListing] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [shareLinkCopied, setShareLinkCopied] = useState(false)
     SwiperCore.use([Autoplay, Navigation])
+    const [relatedListings, setRelatedListings] = useState(null)
+    const [formData, setFormData] = useState({
+        type: "",
+        name: "",
+        bedrooms: 1,
+        bathrooms: 1,
+        parking: true,
+        furnished: false,
+        sqFeet: 0,
+        address: "",
+        description: "",
+        offer: false,
+        regularPrice: 0,
+        discountedPrice: 0,
+        imgUrls: [],
+        geolocation: { lat: 0, lng: 0 }
+    });
 
-    useEffect(()=>{
-        async function fetchListing(){
-            const docRef = doc(db, "listings", params.listingId)
-            const docSnap = await getDoc(docRef)
-            if(docSnap.exists()){
-                setListing(docSnap.data())
-                setLoading(false)
+    const {
+        type,
+        name,
+        bedrooms,
+        bathrooms,
+        parking,
+        furnished,
+        sqFeet,
+        address,
+        description,
+        offer,
+        regularPrice,
+        discountedPrice,
+        imgUrls,
+        geolocation
+    } = formData;
+
+    useEffect(() => {
+        async function fetchListing() {
+            const docRef = doc(db, "listings", params.listingId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setListing(docSnap.data());
+                setFormData({ ...docSnap.data() });
+                setLoading(false);
             }
         }
-        fetchListing()
-        
-    },[ params.listingId])
+        fetchListing();
+    }, [params.listingId]);
 
 
-    if(loading){
-        return <Spinner />
-    }
-
-  return (
-    <>
-    <main className='relative'>
-        <Swiper slidesPerView={1} navigation effect='fade' modules={[EffectFade]} autoplay={{delay:3000}} >
-            {listing.imgUrls.map((url,index)=>(
-                <SwiperSlide key={index}>
-                    <div 
-                        className="w-full overflow-hidden" >
-                            <img src={listing.imgUrls[index]} alt="" className='h-[500px] w-full object-cover' />
-                    </div>
-                </SwiperSlide>
-            ))}
-        </Swiper>
-        <div className="fixed top-[5%] right-[3%] z-10 bg-white cursor-pointer border-2 border-gray-400 rounded-full w-12 h-12 flex justify-center items-center" onClick={()=>{
-            navigator.clipboard.writeText(window.location.href)
-            setShareLinkCopied(true)
-            setTimeout(()=>{
-                setShareLinkCopied(false)
-            }, 2000)
-        }}>
-            <FaShare className="text-lg text-slate-500"/>
-        </div>
-
-        {shareLinkCopied && <p className="fixed top-[9%] right-[3%] z-10 font-semibold border-2 border-gray-400 bg-white rounded-md">Link Copied</p>}
-        
-        <div className="m-4 bg-white flex flex-col md:flex-row max-w-6xl lg:mx-auto p-4 rounded-lg shadow-lg gap-5">
-            <div className="w-full">
-                <p className="text-2xl font-bold mb-3">
-                    {listing.name} - $ {listing.offer 
-                    ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") 
-                    : listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-                    {listing.type === "rent" && " / Month"}
-                </p>
-                <p className="flex items-center mt-6 mb-3 font-semibold">
-                    <MdLocationOn className="text-green-700 mr-1 text-2xl"/>
-                    {listing.address}
-                </p>
-                <div className="flex justify-start items-center space-x-4 w-[75%]">
-                    <p className='bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md'>For {listing.type === "rent" ? "Rent" : "Sale"}</p>
-                    {listing.offer && 
-                        <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">${listing.regularPrice - listing.discountedPrice} discount</p>
-                    }
-                </div>
-                <p className="mt-3 mb-3">
-                    <span className="font-semibold">Description - </span>
-                    {listing.description}
-                </p>
-                <ul className="flex items-center space-x-5 text-sm font-semibold whitespace-nowrap mb-6">
-                    <li className="flex items-center whitespace-nowrap">
-                        <FaBed className="mr-1"/>
-                        {listing.bedrooms > 1 ? `${listing.bedrooms} Bedrooms` : "1 Bedroom"}
-                    </li>
-                    <li className="flex items-center whitespace-nowrap">
-                        <FaBath className="mr-1"/>
-                        {listing.bathrooms > 1 ? `${listing.bedrooms} Bathrooms` : "1 Bathroom"}
-                    </li>
-                    <li className="flex items-center whitespace-nowrap">
-                        <FaParking className="mr-1"/>
-                        {listing.parking ? "Park Avbl." : "No Parking"}
-                    </li>
-                    <li className="flex items-center whitespace-nowrap">
-                        <FaChair className="mr-1"/>
-                        {listing.furnished ? "Park Avbl." : "No Furnished"}
-                    </li>
-                </ul>
-                {/* if the userRef is not the same as the user who create the listing and if contactLandlord is false, show the button */}
-                {listing.userRef !== auth.currentUser?.uid && !contactLandlord && (
-                    <div className="mt-6">
-                        <button 
-                            onClick={() => 
-                                setContactLandlord(true)
-                            }
-                            className="px-7 py-3 bg-blue-600 text-white font-medium text-sm uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg w-full text-center transition duration-200 ease-in-out">
-                            Contact Landlord
-                        </button>
-                    </div>
-                )}
-                {contactLandlord && 
-                    <Contact 
-                        userRef={listing.userRef}
-                        listing={listing}
-                    />
+    useEffect(() => {
+        if (type === "sell") {
+            async function fetchListings() {
+                console.log('it is a sell listing')
+                try {
+                    // get reference
+                    const listingsRef = collection(db, "listings");
+                    // create the query
+                    const q = query(
+                        listingsRef,
+                        where("type", "==", "sell"),
+                        orderBy("timestamp", "desc"),
+                        limit(6)
+                    );
+                    // execute the query
+                    const querySnap = await getDocs(q);
+                    const listings = [];
+                    querySnap.forEach((doc) => {
+                        return listings.push({
+                            id: doc.id,
+                            data: doc.data(),
+                        });
+                    });
+                    setRelatedListings(listings);
+                } catch (error) {
+                    console.log(error);
                 }
-            </div>
-            <div className="bg-blue-300 w-full lg:h-[400px] z-10 overflow-x-hidden"></div>
-        </div>
-    </main>
-    </>
-  )
+            }
+            fetchListings()
+        } else if (type === "rent") {
+            async function fetchListings() {
+                console.log('it is a rent listing')
+                try {
+                    // get reference
+                    const listingsRef = collection(db, "listings");
+                    // create the query
+                    const q = query(
+                        listingsRef,
+                        where("type", "==", "rent"),
+                        orderBy("timestamp", "desc"),
+                        limit(6)
+                    );
+                    // execute the query
+                    const querySnap = await getDocs(q);
+                    const listings = [];
+                    querySnap.forEach((doc) => {
+                        return listings.push({
+                            id: doc.id,
+                            data: doc.data(),
+                        });
+                    });
+                    setRelatedListings(listings);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+            fetchListings()
+        }
+    }, [type])
+
+    //Carousel options
+    const options = {
+        margin: 25,
+        responsiveClass: true,
+        nav: true,
+        dots: false,
+        autoplay: true,
+        smartSpeed: 1000,
+        responsive: {
+            400: {
+                items: 1,
+            },
+            600: {
+                items: 2,
+            },
+            700: {
+                items: 3,
+            },
+        },
+    };
+
+    const Marker = ({ text }) => <div className="marker">{text}</div>;
+
+    const initialLocation = {
+        lat: 49.1649021,
+        lng: -123.1705467,
+    };
+
+    const defaultProps = {
+        center: initialLocation,
+        zoom: 15, // Adjust the zoom level as needed
+    };
+
+    if (loading) {
+        return <Spinner />
+
+    }
+    return (
+        <>
+            <section className='relative bg-[#fcfbfd]'>
+                <Swiper slidesPerView={1} navigation effect='fade' modules={[EffectFade]} autoplay={{ delay: 3000 }} >
+                    {listing.imgUrls.map((url, index) => (
+                        <SwiperSlide key={index}>
+                            <div
+                                className="w-full overflow-hidden" >
+                                <img src={listing.imgUrls[index]} alt="" className='h-[500px] w-full object-cover' />
+                            </div>
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+
+                <div className=" max-w-[1440px] lg:flex lg:mx-auto p-8 gap-8 relative">
+                    <div className="propertyInfo w-full basis-9/12 lg:max-w-[75%]">
+                        <div className="houseTitle flex flex-wrap items-center justify-between mb-3">
+                            <h1 className="text-4xl font-bold ">
+                                {listing.name}
+                            </h1>
+                            <div className="text-2xl">
+                                $ {listing.offer
+                                    ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                    : listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                {listing.type === "rent" && " / Month"}
+                            </div>
+                        </div>
+                        <div className="flex flex-wrap items-center justify-between mb-3">
+                            <p className="flex items-center">
+                                <MdLocationOn className="text-green-700 mr-1 text-xl" />
+                                {listing.address}
+                            </p>
+                            <div className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2" onClick={() => {
+                                navigator.clipboard.writeText(window.location.href)
+                                setShareLinkCopied(true)
+                                setTimeout(() => {
+                                    setShareLinkCopied(false)
+                                }, 2000)
+                            }}>
+                                <FaShareAlt className="text-sm text-slate-500" />
+                                <p className="text-xs">Share</p>
+                                {shareLinkCopied &&
+                                    <p className="absolute w-full text-xs text-center -top-3 -right-8 z-10 font-semibold border border-gray-400 bg-white rounded-md">Link Copied</p>
+                                }
+                            </div>
+                        </div>
+                        <div className="flex justify-start items-center space-x-4 w-[75%] mb-7">
+                            <p className='bg-red-800 w-full max-w-[200px] rounded-md p-1 text-white text-center font-semibold shadow-md'>For {listing.type === "rent" ? "Rent" : "Sale"}</p>
+                            {listing.offer &&
+                                <p className="w-full max-w-[200px] bg-green-800 rounded-md p-1 text-white text-center font-semibold shadow-md">${listing.regularPrice - listing.discountedPrice} discount</p>
+                            }
+                        </div>
+                        <div className="propertyOverview rounded-lg shadow-lg p-7 mb-7 bg-white">
+                            <h3 className="mb-5 font-semibold">Overview</h3>
+                            {/* <ul className="flex flex-row content-center flex-wrap items-center text-sm justify-start gap-5 gap-x-8"> */}
+                            <ul className="grid grid-cols-[repeat(auto-fit,_minmax(100px,_1fr))] gap-5 justify-items-center">
+                                <li>
+                                    <p className="m-auto mb-1">Updated On:</p>
+
+                                    {listing.timestamp &&
+                                        new Date(listing.timestamp.toDate()).toLocaleString("en-US", {
+                                            month: "short",
+                                            year: "numeric",
+                                            day: "2-digit",
+                                        })}
+                                </li>
+                                <li >
+                                    <FaBed className="text-xl m-auto mb-1" />
+                                    {listing.bedrooms > 1 ? `${listing.bedrooms} Bedrooms` : "1 Bedroom"}
+                                </li>
+                                <li >
+                                    <FaBath className="text-xl m-auto mb-1" />
+                                    {listing.bathrooms > 1 ? `${listing.bedrooms} Bathrooms` : "1 Bathroom"}
+                                </li>
+                                <li >
+                                    <FaParking className="text-xl m-auto mb-1" />
+                                    {listing.parking ? "Park Avbl." : "No Parking"}
+                                </li>
+                                <li>
+                                    <FaChair className="text-xl m-auto mb-1" />
+                                    {listing.furnished ? "Park Avbl." : "No Furnished"}
+                                </li>
+                                <li>
+                                    <LiaRulerCombinedSolid className="text-xl m-auto mb-1" />
+                                    {listing.sqFeet} ft<sup>2</sup>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="propertyDescription rounded-lg shadow-lg p-7 mb-7 bg-white">
+                            <h3 className="mb-5 font-semibold">Description</h3>
+                            <p className="text-sm">{listing.description}</p>
+                        </div>
+
+
+                        {/* <div style={{ height: '50vh', width: '100%' }}>
+                            <GoogleMapReact
+                                bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
+                                defaultCenter={defaultProps.center}
+                                defaultZoom={defaultProps.zoom}
+                            >
+                                <AnyReactComponent
+                                    lat={43.6715277}
+                                    lng={-79.37995}
+                                    text="My Marker"
+                                />
+                            </GoogleMapReact>
+                        </div> */}
+
+                        <div style={{ height: '500px', width: '100%' }}>
+                            <GoogleMapReact
+                                bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
+                                defaultCenter={defaultProps.center}
+                                defaultZoom={defaultProps.zoom}
+                                draggable={true}
+                            >
+                                {/* Add a marker for the specified location */}
+                                <Marker lat={initialLocation.lat} lng={initialLocation.lng} text="Your Location" />
+                            </GoogleMapReact>
+                        </div>
+
+                        {relatedListings && relatedListings.length > 0 && (
+                            <div className="similarListings mb-7">
+                                <h3 className="mb-5 text-2xl font-bold">Similar Listings</h3>
+                                {/* <ul className='grid grid-cols-2 gap-5 mt-6' >
+                                    {relatedListings.map(listing => (
+                                        <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                                    ))}
+                                </ul> */}
+
+                                <OwlCarousel
+                                    className="owl-theme"
+                                    {...options}>
+                                    {relatedListings.map(listing => (
+                                        <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                                    ))}
+                                </OwlCarousel>
+
+                            </div>
+                        )}
+                    </div>
+                    <div className="contact basis-3/12 relative lg:max-w-[25%]">
+                        {/* if the userRef is not the same as the user who create the listing and if contactLandlord is false, show the button */}
+                        <div className="rounded-lg shadow-lg p-7 bg-white sticky top-[70px]">
+                            <h3 className="mb-5 font-semibold">Request Info</h3>
+                            <p>Contact Landlord</p>
+                            {listing.userRef !== auth.currentUser?.uid && (
+                                <Contact
+                                    userRef={listing.userRef}
+                                    listing={listing}
+                                />
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </section >
+        </>
+    )
 }
 
 export default Listing

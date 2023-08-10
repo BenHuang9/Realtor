@@ -25,13 +25,12 @@ function CreateListing() {
         bathrooms: 1,
         parking: true,
         furnished: false,
+        sqFeet: 0,
         address: "",
         description: "",
         offer: false,
         regularPrice: 0,
         discountedPrice: 0,
-        latitude: 0,
-        longitude: 0,
         images: [],
         geolocation: { lat: 0, lng: 0 }
     })
@@ -45,13 +44,12 @@ function CreateListing() {
         bathrooms,
         parking,
         furnished,
+        sqFeet,
         address,
         description,
         offer,
         regularPrice,
         discountedPrice,
-        latitude,
-        longitude,
         images,
         geolocation
     } = formData
@@ -332,6 +330,18 @@ function CreateListing() {
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
                             />
                         </div>
+                        {type === "sell" &&
+                            <div>
+                                <p className="text-lg font-semibold">House Size (ft<sup>2</sup>)</p>
+                                <input
+                                    type="number"
+                                    id="sqFeet"
+                                    value={sqFeet}
+                                    onChange={onChange}
+                                    className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
+                                />
+                            </div>
+                        }
                     </div>
                     <div className="parking">
                         <p className="text-lg mt-6 font-semibold">Parking Spot</p>
@@ -469,7 +479,7 @@ function CreateListing() {
                             </div>
                         }
                     </div>
-                    
+
                     <div className="mb-6 images">
                         <p className="text-lg font-semibold">Images</p>
                         <div className="py-2">
@@ -493,7 +503,7 @@ function CreateListing() {
                             </label>
                         </div>
 
-                        <div className="grid lg:grid-cols-4 gap-5 pb-6">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 pb-6">
                             {formData.images.map((file, index) => (
                                 <div key={index} className="uploadImg">
                                     <img src={URL.createObjectURL(file)} alt={`Uploaded ${index}`} className="h-full object-cover" />

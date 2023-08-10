@@ -13,6 +13,8 @@ import Listing from "./pages/Listing";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Category from "./pages/Category";
+import 'owl.carousel/dist/assets/owl.carousel.css';
+import 'owl.carousel/dist/assets/owl.theme.default.css';
 
 function App() {
   return (

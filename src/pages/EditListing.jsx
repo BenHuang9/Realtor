@@ -26,6 +26,7 @@ function EditListing() {
         bathrooms: 1,
         parking: true,
         furnished: false,
+        sqFeet: 0,
         address: "",
         description: "",
         offer: false,
@@ -42,6 +43,7 @@ function EditListing() {
         bathrooms,
         parking,
         furnished,
+        sqFeet,
         address,
         description,
         offer,
@@ -73,8 +75,13 @@ function EditListing() {
             }
         }
         fetchListing();
+
     }, [navigate, params.listingId]);
 
+    if(type === "sell"){
+        console.log('yes')
+    }
+    
     const { ref } = usePlacesWidget({
         apiKey: process.env.REACT_APP_GEOCODE_API_KEY,
         onPlaceSelected: (place) => {
@@ -113,7 +120,7 @@ function EditListing() {
         }
     }
 
-    console.log(images)
+    // console.log(images)
 
 
     const handleLocalImageDelete = (index) => {
@@ -122,7 +129,7 @@ function EditListing() {
         setImages(newImages);
     }
 
-    const handleStoreImageDelete = async (index) =>{
+    const handleStoreImageDelete = async (index) => {
         const imageUrlToDelete = imgUrls[index];
 
         try {
@@ -149,7 +156,7 @@ function EditListing() {
         }
     };
 
-    console.log(imgUrls)
+    // console.log(imgUrls)
 
     const handleDragOver = (event) => {
         event.preventDefault();
@@ -314,6 +321,18 @@ function EditListing() {
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
                             />
                         </div>
+                        {type === "sell" &&
+                            <div>
+                                <p className="text-lg font-semibold">House Size (ft<sup>2</sup>)</p>
+                                <input
+                                    type="number"
+                                    id="sqFeet"
+                                    value={sqFeet}
+                                    onChange={onChange}
+                                    className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
+                                />
+                            </div>
+                        }
                     </div>
                     <div className="parking">
                         <h3 className="text-lg mt-6 font-semibold">Parking Spot</h3>
@@ -475,7 +494,7 @@ function EditListing() {
                             </label>
                         </div>
 
-                        <div className="grid lg:grid-cols-4 gap-5 pb-6">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 pb-6">
 
                             {imgUrls.map((imageUrl, index) => (
                                 <div key={index} className="uploadImg">
