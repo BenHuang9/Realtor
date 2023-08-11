@@ -20,7 +20,7 @@ function Header() {
             }
         })
  
-    },[])
+    },[auth])
 
     async function onLogout(){
         await auth.signOut()

@@ -66,7 +66,7 @@ function Home() {
             </form>
           </div>
           <div>
-            <img src={HeroImg} alt="home hero image" className=" h-[450px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 border-white/[.12]" data-aos="fade-left" data-aos-duration="2500" />
+            <img src={HeroImg} alt="home hero banner" className=" h-[450px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 border-white/[.12]" data-aos="fade-left" data-aos-duration="2500" />
           </div>
         </div>
       </section>
@@ -81,7 +81,7 @@ function Home() {
           </div>
           <div className='grid lg:grid-cols-3 gap-5 mt-10'>
             <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-duration="1500">
-              <img className="w-[64px]" src={BuyHouse}/>
+              <img className="w-[64px]" src={BuyHouse} alt='buy service'/>
               <h3 className="text-[1.75rem] text-[#BF974F] font-semibold mb-2">Buy a property</h3>
               <p>We can find a property for the price range that fits your needs. We will help you to find the most suitable bank, prepare loan application organize an approval process and finally close on the property.</p>
               <div>
@@ -91,7 +91,7 @@ function Home() {
               </div>
             </div>
             <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-duration="1500" data-aos-delay="100">
-            <img className="w-[64px]" src={SellHouse}/>
+            <img className="w-[64px]" src={SellHouse} alt="sell service"/>
               <h3 className="text-[1.75rem] text-[#BF974F] font-semibold mb-2">Sell a property</h3>
               <p>We will take care of all paperwork, advertising, and organizing of open houses, showings and negotiations. Our experienced brokers will make sure that you get the highest price possible for your property.</p>
               <div>
@@ -101,7 +101,7 @@ function Home() {
               </div>
             </div>
             <div className='border-2 border-black rounded-lg px-4 py-8 flex flex-col justify-between' data-aos="fade-up" data-aos-duration="1500" data-aos-delay="150">
-            <img className="w-[64px]" src={RentHouse}/>
+            <img className="w-[64px]" src={RentHouse} alt="rent service"/>
               <h3 className="text-[1.75rem] text-[#BF974F] font-semibold mb-2">Rent a property</h3>
               <p>Find your new apartment or house in a safe and fast way. We will take care of the paperwork. You focus on your move to a new city. We are a boutique real estate firm with a distinct focus on customer service.</p>
               <div>
@@ -153,7 +153,7 @@ function Home() {
             <div className="py-2">
               <CountUp start={0} end={10000} enableScrollSpy={true} scrollSpyOnce={true}>
                 {({ countUpRef}) => (
-                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-[#BF974F]"/>
+                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-[#BF974F]">number</h2>
                 )}
               </CountUp>
               <p className=" text-xl">Number Of Sold Listings</p>
@@ -161,7 +161,7 @@ function Home() {
             <div className="py-2">
             <CountUp start={0} end={10000} enableScrollSpy={true} scrollSpyOnce={true}>
                 {({ countUpRef}) => (
-                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-[#BF974F]"/>
+                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-[#BF974F]">number</h2>
                 )}
               </CountUp>
               <p className=" text-xl">Clients We've Served</p>
@@ -169,14 +169,14 @@ function Home() {
             <div className="py-2">
             <CountUp start={0} end={15000} enableScrollSpy={true} scrollSpyOnce={true}>
                 {({ countUpRef}) => (
-                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-[#BF974F]"/>
+                    <h2 ref={countUpRef} className=" text-[3rem] font-semibold text-[#BF974F]">number</h2>
                 )}
               </CountUp>
               <p className=" text-xl">Number Of Active Listings</p>
             </div>
           </div>
           <div>
-            <img src={OurGoal} alt="our goal image" className="h-[560px]"/>
+            <img src={OurGoal} alt="our goal" className="h-[560px]"/>
           </div>
         </div>
       </section>

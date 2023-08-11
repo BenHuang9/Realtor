@@ -1,6 +1,5 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import Moment from 'react-moment'
 import { MdLocationOn, MdEdit } from "react-icons/md"
 import { FaTrash, FaBed} from "react-icons/fa"
 import {  LiaBathSolid, LiaRulerCombinedSolid } from "react-icons/lia"
@@ -14,6 +13,7 @@ function ListingItem({listing, id, onEdit, onDelete}) {
                     src={listing.imgUrls[0]} 
                     loading="lazy" 
                     className='h-[200px] w-full object-cover transition duration-200 ease-in'
+                    alt="listing item"
                 />
             </div>
            

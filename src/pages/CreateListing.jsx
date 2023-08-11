@@ -14,7 +14,6 @@ function CreateListing() {
     // if use google geolocation with bank card set to true
     const auth = getAuth()
     const navigate = useNavigate()
-    const [geolocationEnabled, setGeolocationEnabled] = useState(true)
     const [dragging, setDragging] = useState(false);
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
@@ -68,8 +67,10 @@ function CreateListing() {
             setFormData((prevState) => ({
                 ...prevState,
                 address: place.formatted_address,
-                geolocation, lat: place.geometry.location.lat(),
-                geolocation, lng: place.geometry.location.lng(),
+                geolocation: {
+                    lat: place.geometry.location.lat(),
+                    lng: place.geometry.location.lng()
+                },
             }))
         },
         options: {
@@ -183,6 +184,7 @@ function CreateListing() {
                             case 'running':
                                 console.log('Upload is running');
                                 break;
+                            //no default
                         }
                     },
                     (error) => {

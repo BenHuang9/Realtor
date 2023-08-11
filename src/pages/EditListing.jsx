@@ -206,6 +206,7 @@ function EditListing() {
                             case 'running':
                                 console.log('Upload is running');
                                 break;
+                            //no default
                         }
                     },
                     (error) => {

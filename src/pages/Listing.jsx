@@ -14,7 +14,7 @@ import GoogleMapReact from 'google-map-react';
 import LightGallery from 'lightgallery/react';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
-
+import EmailTemplate from '../components/EmailTemplate'
 
 function Listing() {
 
@@ -24,39 +24,7 @@ function Listing() {
     const [loading, setLoading] = useState(true)
     const [shareLinkCopied, setShareLinkCopied] = useState(false)
     const [relatedListings, setRelatedListings] = useState(null)
-    const [formData, setFormData] = useState({
-        type: "",
-        name: "",
-        bedrooms: 1,
-        bathrooms: 1,
-        parking: true,
-        furnished: false,
-        sqFeet: 0,
-        address: "",
-        description: "",
-        offer: false,
-        regularPrice: 0,
-        discountedPrice: 0,
-        imgUrls: [],
-        geolocation: { lat: 0, lng: 0 }
-    });
-
-    const {
-        type,
-        name,
-        bedrooms,
-        bathrooms,
-        parking,
-        furnished,
-        sqFeet,
-        address,
-        description,
-        offer,
-        regularPrice,
-        discountedPrice,
-        imgUrls,
-        geolocation
-    } = formData;
+    const [type, setType] = useState(null);
 
     useEffect(() => {
         async function fetchListing() {
@@ -64,13 +32,12 @@ function Listing() {
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 setListing(docSnap.data());
-                setFormData({ ...docSnap.data() });
+                setType(docSnap.data().type);
                 setLoading(false);
             }
         }
         fetchListing();
     }, [params.listingId]);
-
 
     useEffect(() => {
         if (type === "sell") {
@@ -182,17 +149,19 @@ function Listing() {
                     speed={500}
                     plugins={[lgThumbnail, lgZoom]}
                     mode="lg-fade"
-                    elementClassNames="lightGallery grid grid-rows-2 grid-cols-3 md:grid-cols-4 grid-flow-col h-[40vh] md:h-[50vh]"
+                    elementClassNames="lightGallery grid grid-rows-2 grid-cols-3 lg:grid-cols-4 grid-flow-col h-[40vh] md:h-[50vh]"
                 >
                     {listing.imgUrls.map((url, index) => {
                         return (
                             <a
                                 className="gallery-item cursor-pointer"
                                 href={listing.imgUrls[index]}
+                                key={index}
                             >
                                 <img
                                     className="img-responsive w-full object-cover h-full"
                                     src={listing.imgUrls[index]}
+                                    alt='listing gallery'
                                 />
                             </a>
                         )
@@ -292,21 +261,6 @@ function Listing() {
                             <p className="text-sm">{listing.description}</p>
                         </div>
 
-
-                        {/* <div style={{ height: '50vh', width: '100%' }}>
-                            <GoogleMapReact
-                                bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
-                                defaultCenter={defaultProps.center}
-                                defaultZoom={defaultProps.zoom}
-                            >
-                                <AnyReactComponent
-                                    lat={43.6715277}
-                                    lng={-79.37995}
-                                    text="My Marker"
-                                />
-                            </GoogleMapReact>
-                        </div> */}
-
                         <div className="propertyMap rounded-lg shadow-lg p-7 mb-7 bg-white">
                             <h3 className="mb-5 font-semibold">Location</h3>
                             <div className="w-full h-[350px] lg:h-[500px]">
@@ -349,10 +303,10 @@ function Listing() {
                             <h3 className="mb-5 font-semibold">Request Info</h3>
                             <p>Contact Landlord</p>
                             {listing.userRef !== auth.currentUser?.uid && (
-                                <Contact
-                                    userRef={listing.userRef}
-                                    listing={listing}
-                                />
+                                    <EmailTemplate
+                                        userRef={listing.userRef}
+                                        listing={listing} 
+                                    />
                             )}
                         </div>
                     </div>
