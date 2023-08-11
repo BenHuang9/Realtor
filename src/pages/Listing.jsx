@@ -3,10 +3,6 @@ import { useParams } from 'react-router'
 import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 import { db } from '../firebase'
 import Spinner from '../components/Spinner';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore from "swiper"
-import { EffectFade, Autoplay, Navigation } from 'swiper/modules'
-import "swiper/css/bundle"
 import { FaShareAlt, FaBed, FaBath, FaParking, FaChair, FaMapMarkerAlt } from "react-icons/fa"
 import { LiaRulerCombinedSolid } from "react-icons/lia"
 import { MdLocationOn, MdPrint } from "react-icons/md"
@@ -15,6 +11,9 @@ import Contact from '../components/Contact';
 import ListingItem from '../components/ListingItem';
 import OwlCarousel from 'react-owl-carousel';
 import GoogleMapReact from 'google-map-react';
+import LightGallery from 'lightgallery/react';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
 
 
 function Listing() {
@@ -24,7 +23,6 @@ function Listing() {
     const [listing, setListing] = useState(null)
     const [loading, setLoading] = useState(true)
     const [shareLinkCopied, setShareLinkCopied] = useState(false)
-    SwiperCore.use([Autoplay, Navigation])
     const [relatedListings, setRelatedListings] = useState(null)
     const [formData, setFormData] = useState({
         type: "",
@@ -138,7 +136,7 @@ function Listing() {
     const options = {
         margin: 25,
         responsiveClass: true,
-        
+
         dots: false,
         autoplay: true,
         smartSpeed: 1000,
@@ -180,16 +178,27 @@ function Listing() {
     return (
         <>
             <section className='relative bg-[#fcfbfd]'>
-                <Swiper slidesPerView={1} navigation effect='fade' modules={[EffectFade]} autoplay={{ delay: 3000 }} >
-                    {listing.imgUrls.map((url, index) => (
-                        <SwiperSlide key={index}>
-                            <div
-                                className="w-full overflow-hidden" >
-                                <img src={listing.imgUrls[index]} alt="" className='h-[500px] w-full object-cover' />
-                            </div>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                <LightGallery
+                    speed={500}
+                    plugins={[lgThumbnail, lgZoom]}
+                    mode="lg-fade"
+                    elementClassNames="lightGallery grid grid-rows-2 grid-cols-3 md:grid-cols-4 grid-flow-col h-[50vh]"
+                >
+                    {listing.imgUrls.map((url, index) => {
+                        return (
+                            <a
+                                className="gallery-item cursor-pointer"
+                                href={listing.imgUrls[index]}
+                            >
+                                <img
+                                    className="img-responsive w-full object-cover h-full"
+                                    src={listing.imgUrls[index]}
+                                />
+                            </a>
+                        )
+                    })}
+                </LightGallery>
+
 
                 <div className=" max-w-[1440px] lg:flex lg:mx-auto p-8 gap-8 relative ">
                     <div className="propertyInfo w-full basis-9/12 lg:max-w-[75%]">
@@ -210,8 +219,8 @@ function Listing() {
                                 {listing.address}
                             </p>
                             <div className="flex gap-2">
-                                <div 
-                                    className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2" 
+                                <div
+                                    className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2"
                                     onClick={() => {
                                         navigator.clipboard.writeText(window.location.href)
                                         setShareLinkCopied(true)
@@ -226,13 +235,13 @@ function Listing() {
                                         <p className="absolute w-full text-xs text-center -top-3 -right-8 z-10 font-semibold border border-gray-400 bg-white rounded-md">Link Copied</p>
                                     }
                                 </div>
-                                <div 
-                                    className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2" 
+                                <div
+                                    className="bg-white cursor-pointer relative rounded-full py-2 px-3 flex justify-center items-center shadow-lg gap-2"
                                     onClick={() => {
                                         window.print();
                                     }}
                                 >
-                                    <MdPrint className=" text-slate-500"/>
+                                    <MdPrint className=" text-slate-500" />
                                     <p className="text-xs">Print</p>
                                 </div>
                             </div>

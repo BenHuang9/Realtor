@@ -2,33 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
+body {
     background-color: white;
 }
 
-html::-webkit-scrollbar{
+html::-webkit-scrollbar {
     display: none;
 }
 
-html{
+html {
     scrollbar-width: none;
 }
 
-.profile-list button[aria-selected="true"]{
+.profile-list button[aria-selected="true"] {
     border-bottom: 2px solid red;
 }
 
-.profile-list button{
+.profile-list button {
     padding-bottom: 1rem;
 }
 
 
-@media(min-width:1024px){
-    .profile-list button{
+@media(min-width:1024px) {
+    .profile-list button {
         padding-bottom: 0;
     }
 
-    .profile-list button[aria-selected="true"]{
+    .profile-list button[aria-selected="true"] {
         background-color: #BF974F;
         padding: 1.5rem 2rem;
         border-radius: 99rem;
@@ -37,11 +37,59 @@ html{
     }
 }
 
-.listingCard:hover img{
+.listingCard:hover img {
     transform: scale(1.1);
 }
 
 .owl-prev span,
-.owl-next span{
+.owl-next span {
     font-size: 28px;
+}
+
+.lightGallery a:nth-child(1) {
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.lightGallery a:nth-child(5) {
+    position: relative;
+}
+
+.lightGallery a:nth-child(2),
+.lightGallery a:nth-child(3) {
+    display: none;
+}
+
+.lightGallery a:nth-child(5) img {
+    filter: opacity(65%);
+    transition: all 0.2s ease-in-out;
+}
+
+.lightGallery a:nth-child(5):hover img {
+    filter: opacity(100%);
+}
+
+.lightGallery a:nth-child(5)::after {
+    content: "View More";
+    position: absolute;
+    font-size: 24px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lightGallery a:nth-child(6) {
+    display: none;
+}
+
+@media(min-width:768px) {
+
+    .lightGallery a:nth-child(2),
+    .lightGallery a:nth-child(3) {
+        display: block;
+    }
+
+
 }

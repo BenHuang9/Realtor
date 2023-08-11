@@ -15,6 +15,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Category from "./pages/Category";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lg-thumbnail.css';
 
 function App() {
   return (

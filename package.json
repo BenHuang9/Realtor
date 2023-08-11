@@ -10,6 +10,7 @@
     "aos": "^3.0.0-beta.6",
     "firebase": "^10.1.0",
     "google-map-react": "^2.2.1",
+    "lightgallery": "^2.7.1",
     "react": "^18.2.0",
     "react-countup": "^6.4.2",
     "react-dom": "^18.2.0",
