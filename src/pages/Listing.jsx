@@ -7,7 +7,6 @@ import { FaShareAlt, FaBed, FaBath, FaParking, FaChair, FaMapMarkerAlt } from "r
 import { LiaRulerCombinedSolid } from "react-icons/lia"
 import { MdLocationOn, MdPrint } from "react-icons/md"
 import { getAuth } from 'firebase/auth';
-import Contact from '../components/Contact';
 import ListingItem from '../components/ListingItem';
 import OwlCarousel from 'react-owl-carousel';
 import GoogleMapReact from 'google-map-react';
