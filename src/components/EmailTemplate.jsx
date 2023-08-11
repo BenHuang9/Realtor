@@ -45,7 +45,7 @@ const EmailTemplate = ({ userRef, listing }) => {
     }
     const handleSendClick = (e) => {
         const subject = encodeURIComponent(`I'm interested in your listing - ${listing.name}`);
-        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone Number:${phone}\nMessage: ${message}`);
+        const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nPhone Number: ${phone}\nMessage: ${message}`);
         const mailtoUrl = `mailto:${landlord.email}?subject=${subject}&body=${body}`;
         window.open(mailtoUrl, '_blank');
         setEmailForm({
