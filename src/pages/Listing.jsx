@@ -182,7 +182,7 @@ function Listing() {
                     speed={500}
                     plugins={[lgThumbnail, lgZoom]}
                     mode="lg-fade"
-                    elementClassNames="lightGallery grid grid-rows-2 grid-cols-3 md:grid-cols-4 grid-flow-col h-[50vh]"
+                    elementClassNames="lightGallery grid grid-rows-2 grid-cols-3 md:grid-cols-4 grid-flow-col h-[40vh] md:h-[50vh]"
                 >
                     {listing.imgUrls.map((url, index) => {
                         return (

@@ -74,7 +74,7 @@ html {
 .lightGallery a:nth-child(5)::after {
     content: "View More";
     position: absolute;
-    font-size: 24px;
+    font-size: 13px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -91,5 +91,7 @@ html {
         display: block;
     }
 
-
+    .lightGallery a:nth-child(5)::after {
+        font-size: 24px;
+    }
 }
