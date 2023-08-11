@@ -138,7 +138,7 @@ function Listing() {
     const options = {
         margin: 25,
         responsiveClass: true,
-        nav: true,
+        
         dots: false,
         autoplay: true,
         smartSpeed: 1000,
@@ -148,9 +148,11 @@ function Listing() {
             },
             550: {
                 items: 2,
+                nav: true,
             },
             768: {
                 items: 3,
+                nav: true,
             },
         },
     };
@@ -191,8 +193,8 @@ function Listing() {
 
                 <div className=" max-w-[1440px] lg:flex lg:mx-auto p-8 gap-8 relative ">
                     <div className="propertyInfo w-full basis-9/12 lg:max-w-[75%]">
-                        <div className="houseTitle flex flex-wrap items-center justify-between mb-3">
-                            <h1 className="text-4xl font-bold ">
+                        <div className="houseTitle sm:flex flex-wrap items-center justify-between mb-3">
+                            <h1 className="mb-1 text-2xl sm:text-4xl sm:mb-0 font-bold ">
                                 {listing.name}
                             </h1>
                             <div className="text-2xl">
@@ -202,9 +204,9 @@ function Listing() {
                                 {listing.type === "rent" && " / Month"}
                             </div>
                         </div>
-                        <div className="flex flex-wrap items-center justify-between mb-3">
-                            <p className="flex items-center">
-                                <MdLocationOn className="text-green-700 mr-1 text-xl" />
+                        <div className="flex flex-wrap items-center justify-between mb-3 gap-2">
+                            <p className="flex items-center text-sm">
+                                <MdLocationOn className="text-green-700 mr-1 sm:text-xl" />
                                 {listing.address}
                             </p>
                             <div className="flex gap-2">
