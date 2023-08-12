@@ -41,7 +41,6 @@ function Listing() {
     useEffect(() => {
         if (type === "sell") {
             async function fetchListings() {
-                console.log('it is a sell listing')
                 try {
                     // get reference
                     const listingsRef = collection(db, "listings");
@@ -69,7 +68,6 @@ function Listing() {
             fetchListings()
         } else if (type === "rent") {
             async function fetchListings() {
-                console.log('it is a rent listing')
                 try {
                     // get reference
                     const listingsRef = collection(db, "listings");

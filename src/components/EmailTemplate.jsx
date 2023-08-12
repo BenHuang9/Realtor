@@ -55,8 +55,6 @@ const EmailTemplate = ({ userRef, listing }) => {
             message: "",
         })
     };
-
-    console.log(emailForm)
     return (
         <>
             {landlord !== null &&
