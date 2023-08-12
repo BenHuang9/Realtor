@@ -24,14 +24,13 @@ function CreateListing() {
         bathrooms: 1,
         parking: true,
         furnished: false,
-        sqFeet: 0,
+        sqFeet: null,
         address: "",
         description: "",
-        offer: false,
-        regularPrice: 0,
-        discountedPrice: 0,
+        price: 0,
         images: [],
-        geolocation: { lat: 0, lng: 0 }
+        geolocation: { lat: 0, lng: 0 },
+        cityState: { city: "", state: "" }
     })
 
     // Code below is the same as formData.type, formData.name
@@ -46,11 +45,10 @@ function CreateListing() {
         sqFeet,
         address,
         description,
-        offer,
-        regularPrice,
-        discountedPrice,
+        price,
         images,
-        geolocation
+        geolocation,
+        cityState
     } = formData
 
     useEffect(() => {
@@ -61,9 +59,19 @@ function CreateListing() {
         apiKey: process.env.REACT_APP_GEOCODE_API_KEY,
         onPlaceSelected: (place) => {
             console.log(place);
-            console.log(place.formatted_address)
-            geolocation.lat = place.geometry.location.lat()
-            geolocation.lng = place.geometry.location.lng()
+            console.log(place.formatted_address);
+            console.log(place.address_components);
+    
+            // Find the 'locality' component within address_components
+            const localityComponent = place.address_components.find(component =>
+                component.types.includes('locality')
+            );
+    
+            // Find the 'administrative_area_level_1' component within address_components
+            const stateComponent = place.address_components.find(component =>
+                component.types.includes('administrative_area_level_1')
+            );
+    
             setFormData((prevState) => ({
                 ...prevState,
                 address: place.formatted_address,
@@ -71,43 +79,50 @@ function CreateListing() {
                     lat: place.geometry.location.lat(),
                     lng: place.geometry.location.lng()
                 },
-            }))
+                cityState: {
+                    city: localityComponent ? localityComponent.long_name : '',
+                    state: stateComponent ? stateComponent.long_name : ''
+                }
+            }));
         },
         options: {
             types: ["address"],
             componentRestrictions: { country: "ca" },
-
         },
-
     });
 
     console.log(geolocation)
+    console.log(cityState)
 
     function onChange(e) {
-        let boolean = null
-        if (e.target.value === "true") {
-            boolean = true
-        }
-        if (e.target.value === "false") {
-            boolean = false
-        }
-        if (e.target.files) {
-            const files = e.target.files;
-            const newImages = [...images, ...files]; // Add the new files to the array
-            setFormData({
-                ...formData,
-                images: newImages, // Update the images array in the formData state
-            });
+        const { id, value, files } = e.target;
+        let newValue;
+
+        switch (id) {
+            case 'bedrooms':
+            case 'bathrooms':
+            case 'price':
+            case 'sqFeet':
+                newValue = parseInt(value, 10);
+                break;
+            default:
+                newValue = value === 'true' ? true : value === 'false' ? false : value;
+                break;
         }
 
-        if (!e.target.files) {
+        if (files) {
+            const newImages = [...images, ...files];
+            setFormData({
+                ...formData,
+                images: newImages,
+            });
+        } else {
             setFormData((prevState) => ({
                 ...prevState,
-                [e.target.id]: boolean ?? e.target.value  //explanation at 8:24 on Youtube
-            }))
+                [id]: newValue
+            }));
         }
     }
-    console.log(images)
 
     const handleImageDelete = (index) => {
         const newImages = [...formData.images];
@@ -147,12 +162,6 @@ function CreateListing() {
         }
 
         setLoading(true)
-
-        if (discountedPrice >= regularPrice) {
-            setLoading(false)
-            toast.error("Discount price needs to be less than regular price.")
-            return
-        }
 
         //check if images are more than 6 not working
         if (images.length > 6) {
@@ -222,15 +231,12 @@ function CreateListing() {
         }
 
         delete formDataCopy.images
-        !formDataCopy.offer && delete formDataCopy.discountedPrice
         const docRef = await addDoc(collection(db, "listings"), formDataCopy)
         setLoading(false)
         toast.success("Listing created.")
-        navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+        // navigate(`/category/${formDataCopy.type}/${docRef.id}`)
+        navigate(`/listing/${docRef.id}`)
     }
-
-
-
 
     // if loading is true, trigger the spinner component
     if (loading) {
@@ -248,9 +254,9 @@ function CreateListing() {
                         <button
                             type="button"
                             id="type"
-                            value="sell"
+                            value="sales"
                             onClick={onChange}
-                            className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${type === "sell" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
+                            className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${type === "sales" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
                             Sell
                         </button>
                         <button
@@ -332,7 +338,7 @@ function CreateListing() {
                                 className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
                             />
                         </div>
-                        {type === "sell" &&
+                        {type === "sales" &&
                             <div>
                                 <p className="text-lg font-semibold">House Size (ft<sup>2</sup>)</p>
                                 <input
@@ -412,36 +418,15 @@ function CreateListing() {
                             className="w-[50%] px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 mb-6"
                         />
                     </div>
-                    <div className="offer">
-                        <p className="text-lg font-semibold">Offer</p>
-                        <div className="flex justify-between mb-6">
-                            <button
-                                type="button"
-                                id="offer"
-                                value={true}
-                                onClick={onChange}
-                                className={`mr-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${!offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                                Yes
-                            </button>
-                            <button
-                                type="button"
-                                id="offer"
-                                value={false}
-                                onClick={onChange}
-                                className={`ml-3 px-7 py-3 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${offer ? "bg-white text-black" : "bg-[#856937] text-white"}`}>
-                                No
-                            </button>
-                        </div>
-                    </div>
                     <div className="price">
                         <div className="flex items-center mb-6">
                             <div>
-                                <p className="text-lg font-semibold">Regular Price</p>
+                                <p className="text-lg font-semibold">Price</p>
                                 <div className="flex w-full justify-center items-center space-x-6">
                                     <input
                                         type="number"
-                                        id="regularPrice"
-                                        value={regularPrice}
+                                        id="price"
+                                        value={price}
                                         onChange={onChange}
                                         min="50"
                                         max="40000000"
@@ -456,37 +441,13 @@ function CreateListing() {
                                 </div>
                             </div>
                         </div>
-                        {offer &&
-                            <div className="flex items-center mb-6">
-                                <div>
-                                    <p className="text-lg font-semibold">Discount Price</p>
-                                    <div className="flex w-full justify-center items-center space-x-6">
-                                        <input
-                                            type="number"
-                                            id="discountedPrice"
-                                            value={discountedPrice}
-                                            onChange={onChange}
-                                            min="50"
-                                            max="40000000"
-                                            required={offer}
-                                            className="w-full px-4 py-2 text-xl text-gray-700 bg-white border border-gray-300 rounded transition duration-200 ease-in-out focus:text-gray-700 focus:bg-white focus:border-[#856937] focus:ring-0 text-center"
-                                        />
-                                        {type === "rent" && (
-                                            <div>
-                                                <p className="text-md w-full whitespace-nowrap">$/Month</p>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        }
                     </div>
 
                     <div className="mb-6 images">
                         <p className="text-lg font-semibold">Images</p>
                         <div className="py-2">
                             <label
-                                for="images"
+                                htmlFor="images"
                                 onDragOver={handleDragOver}
                                 onDrop={(event) => handleDrop(event)}
                                 onDragLeave={handleDragLeave}

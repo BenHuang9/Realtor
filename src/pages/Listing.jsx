@@ -173,9 +173,7 @@ function Listing() {
                                 {listing.name}
                             </h1>
                             <div className="text-2xl">
-                                $ {listing.offer
-                                    ? listing.discountedPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                                    : listing.regularPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                $ {listing.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                                 {listing.type === "rent" && " / Month"}
                             </div>
                         </div>
@@ -300,10 +298,10 @@ function Listing() {
                             <h3 className="mb-5 font-semibold">Request Info</h3>
                             <p>Contact Landlord</p>
                             {listing.userRef !== auth.currentUser?.uid && (
-                                    <EmailTemplate
-                                        userRef={listing.userRef}
-                                        listing={listing} 
-                                    />
+                                <EmailTemplate
+                                    userRef={listing.userRef}
+                                    listing={listing}
+                                />
                             )}
                         </div>
                     </div>
