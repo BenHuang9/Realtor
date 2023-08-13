@@ -12,12 +12,13 @@ import EditListing from "./pages/EditListing";
 import Listing from "./pages/Listing";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import Category from "./pages/Category";
+// import Category from "./pages/Category";
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
 import 'lightgallery/css/lightgallery.css';
 import 'lightgallery/css/lg-zoom.css';
 import 'lightgallery/css/lg-thumbnail.css';
+import Search from "./pages/Search";
 
 function App() {
   return (
@@ -34,8 +35,9 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/offers" element={<Offers />} />
-          <Route path="/category/:categoryName/:listingId" element={<Listing />} />
-          <Route path="/category/:categoryName" element={<Category />}/>
+          <Route path="/advance-search" element={<Search />} />
+          <Route path="/listing/:listingId" element={<Listing />} />
+          {/* <Route path="/category/:categoryName" element={<Category />}/> */}
           <Route path="/create-listing" element={<PrivateRouter />} >
             <Route path="/create-listing" element={<CreateListing />} />
           </Route>
