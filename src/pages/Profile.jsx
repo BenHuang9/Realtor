@@ -20,9 +20,12 @@ function Profile() {
     name: auth.currentUser.displayName,
     email: auth.currentUser.email
   })
-
   // Code below is the same as formData.type, formData.email
   const { name, email } = formData
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   function onChange(e) {
     setFormData(prevState => ({
@@ -93,25 +96,35 @@ function Profile() {
   }
 
   function onEdit(listingID) {
-
     navigate(`/edit-listing/${listingID}`)
   }
+
+  async function onLogout() {
+    await auth.signOut();
+    navigate('/');
+    localStorage.removeItem('randomColor');
+}
 
   return (
     <>
       <section className="profile">
         <div className="profile-Wrapper lg:flex max-w-[1440px] mx-auto p-8">
           <Tab.Group>
-            <Tab.List className="profile-list flex basis-1/6 lg:flex-col text-xl mt-6">
-              <Tab className="text-left flex items-center gap-2 mb-6 px-8 focus:ring-0">
-                <GiFamilyHouse />
-                <span className="hidden md:block">Listings</span>
-              </Tab>
+            <Tab.List className="profile-list flex justify-between">
+              <div className="flex lg:flex-col text-xl mt-6">
+                <Tab className="text-left flex items-center gap-2 mb-6 px-8 focus:ring-0">
+                  <GiFamilyHouse />
+                  <span className="hidden md:block">Listings</span>
+                </Tab>
 
-              <Tab className="text-left flex items-center gap-2 mb-6 px-8 focus:ring-0">
-                <MdManageAccounts />
-                <span className="hidden md:block">Account</span>
-              </Tab>
+                <Tab className="text-left flex items-center gap-2 mb-6 px-8 focus:ring-0">
+                  <MdManageAccounts />
+                  <span className="hidden md:block">Account</span>
+                </Tab>
+              </div>
+
+              <h3 className="cursor-pointer hover:text-black mt-6 lg:hidden" onClick={onLogout}>Sign Out</h3>
+
             </Tab.List>
 
             <Tab.Panels className="basis-4/6 ml-auto mt-6 ">

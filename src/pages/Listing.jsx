@@ -38,8 +38,10 @@ function Listing() {
         fetchListing();
     }, [params.listingId]);
 
+    console.log(type)
     useEffect(() => {
-        if (type === "sell") {
+        if (type === "sales") {
+            console.log('it is sell')
             async function fetchListings() {
                 try {
                     // get reference
@@ -47,7 +49,7 @@ function Listing() {
                     // create the query
                     const q = query(
                         listingsRef,
-                        where("type", "==", "sell"),
+                        where("type", "==", "sales"),
                         orderBy("timestamp", "desc"),
                         limit(6)
                     );
@@ -67,6 +69,7 @@ function Listing() {
             }
             fetchListings()
         } else if (type === "rent") {
+            console.log('it is rent')
             async function fetchListings() {
                 try {
                     // get reference
@@ -137,8 +140,9 @@ function Listing() {
 
     if (loading) {
         return <Spinner />
-
     }
+
+    console.log(relatedListings)
     return (
         <>
             <section className='relative bg-[#fcfbfd]'>

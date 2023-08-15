@@ -4,6 +4,7 @@ import {
     getDocs,
     query,
     where,
+    orderBy,
 } from "firebase/firestore";
 import { db } from '../firebase'
 import ListingItem from '../components/ListingItem'
@@ -20,9 +21,9 @@ import { MdLocationOn } from "react-icons/md"
 import { NavLink } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 
-
-function Search() {
+function PropertyListing() {
     // Retrieve location data from localStorage
+    const [loading, setLoading] = useState(true)
     const [listingLocations, setListingLocations] = useState([]);
     const [placesWidgetRef, setPlacesWidgetRef] = useState({});
     const [zoom, setZoom] = useState(5);
@@ -36,7 +37,7 @@ function Search() {
         lng: -116.516697,
         property: "",
     })
-
+  
     const {
         searchName,
         location,
@@ -47,107 +48,47 @@ function Search() {
         lng,
         property,
     } = filterOption;
-
+  
     const customMarkerIcon = L.divIcon({
         className: 'custom-marker-icon',
         html: ReactDOMServer.renderToString(
             <FaMapMarkerAlt className="text-2xl text-red-500" />
         ),
-
+  
     });
-
+  
     function onChange(id, newValue) {
         setFilterOption(prevState => ({
             ...prevState,
             [id]: newValue
         }));
     }
-
+  
     // show result when home page search by location, find a home button, and find a rent button
     useEffect(() => {
-        const storedLocation = localStorage.getItem('searchLocation');
-
-        if (storedLocation) {
-            const homeSearch = JSON.parse(storedLocation);
-
-            setFilterOption(prevState => ({
-                ...prevState,
-                searchName: homeSearch.searchName,
-                location: homeSearch.name,
-                lat: parseFloat(homeSearch.lat),
-                lng: parseFloat(homeSearch.lng),
-            }));
-
-            async function fetchListings() {
-                try {
-                    const listingsRef = collection(db, "listings");
-                    let q = query(listingsRef);
-
-                    // Apply filters if criteria are set
-                    if (homeSearch.name) {
-                        q = query(q, where("cityState.city", "==", homeSearch.name));
-                    }
-
-                    const querySnap = await getDocs(q);
-                    const listings = [];
-                    querySnap.forEach((doc) => {
-                        listings.push({
-                            id: doc.id,
-                            data: doc.data(),
-                        });
-                    });
-                    setListingLocations(listings);
-                } catch (error) {
-                    console.log(error);
-                }
+        async function fetchListings() {
+            //get the reference
+            try {
+              const listingsRef = collection(db, "listings")
+              const q = query(listingsRef, orderBy("timestamp", "desc"))
+              const querySnap = await getDocs(q)
+              const listings = []
+              querySnap.forEach((doc) => {
+                return listings.push({
+                  id: doc.id,
+                  data: doc.data(),
+                })
+              })
+              setListingLocations(listings)
+              setLoading(false);
+            } catch (error) {
+              console.log(error)
             }
-            fetchListings();
-        }
-
-        const storedType = localStorage.getItem('type');
-
-        if (storedType) {
-            if (storedType === 'rent') {
-                setFilterOption(prevState => ({
-                    ...prevState,
-                    type: 'rent',
-                }));
-            } else if (storedType === 'sales') {
-                setFilterOption(prevState => ({
-                    ...prevState,
-                    type: 'sales',
-                }));
-            }
-
-            async function fetchListings() {
-                try {
-                    const listingsRef = collection(db, "listings");
-                    let q = query(listingsRef);
-
-                    // Apply filters if criteria are set
-                    if (storedType) {
-                        q = query(q, where("type", "==", storedType));
-                    }
-
-                    const querySnap = await getDocs(q);
-                    const listings = [];
-                    querySnap.forEach((doc) => {
-                        listings.push({
-                            id: doc.id,
-                            data: doc.data(),
-                        });
-                    });
-                    setListingLocations(listings);
-                } catch (error) {
-                    console.log(error);
-                }
-            }
-            fetchListings();
-        }
-
-        console.log(listingLocations.length)
-    }, [listingLocations.length]);
-
+          }
+          fetchListings()
+    }, []);
+  
+    console.log(listingLocations)
     useEffect(() => {
         // Update price range when type changes
         if (type === 'rent') {
@@ -162,7 +103,7 @@ function Search() {
             }));
         }
     }, [type]);
-
+  
     useEffect(() => {
         if (!searchName && listingLocations.length > 0) {
             // Use the first value in the listingLocations object's lat and lng
@@ -173,24 +114,11 @@ function Search() {
             }));
         }
     }, [searchName, listingLocations]);
-
-    useEffect(() => {
-        // Clear localStorage when the component mounts
-        localStorage.removeItem('searchLocation');
-        localStorage.removeItem('type');
-
-        return () => {
-            // Clear localStorage when the component unmounts (optional)
-            localStorage.removeItem('searchLocation');
-            localStorage.removeItem('type');
-        };
-    }, []);
-
-
+  
     //apply filters when click search button
     const handleSearch = async () => {
         try {
-
+  
             if (Object.keys(placesWidgetRef).length !== 0) {
                 // console.log(placesWidgetRef)
                 setFilterOption(prevState => ({
@@ -199,25 +127,27 @@ function Search() {
                     lng: placesWidgetRef.geometry.location.lng(),
                 }))
             }
-
+  
             const listingsRef = collection(db, "listings");
             let q = query(listingsRef);
-
+  
+  
+  
             if (location) {
                 q = query(q, where("cityState.city", "==", location));
             }
-
+  
             if (type) {
                 q = query(q, where("type", "==", type));
             }
-
+  
             if (property) {
                 q = query(q, where("property", "==", property));
             }
-
+  
             const querySnap = await getDocs(q);
             const listings = [];
-
+  
             querySnap.forEach((doc) => {
                 const data = doc.data();
                 const price = data.price;
@@ -231,13 +161,13 @@ function Search() {
                     });
                 }
             });
-
+  
             setListingLocations(listings);
         } catch (error) {
             console.log(error);
         }
     };
-
+  
     const handleReset = () => {
         setFilterOption({
             searchName: "",
@@ -249,17 +179,17 @@ function Search() {
             lng: -116.516697,
             property: "",
         });
-
+  
         setListingLocations([])
         setZoom(5)
     };
-
+  
     console.log(listingLocations)
     useEffect(() => {
         // Update the zoom level based on the presence of listingLocations
         setZoom(listingLocations.length >= 0 ? 12 : 5);
     }, [listingLocations]);
-
+  
     const { ref } = usePlacesWidget({
         apiKey: process.env.REACT_APP_GEOCODE_API_KEY,
         onPlaceSelected: (place) => {
@@ -269,19 +199,20 @@ function Search() {
                 location: place.address_components[0].long_name,
                 searchName: place.formatted_address
             }))
-
+  
             setPlacesWidgetRef(place)
-
+  
         },
         options: {
             types: ["locality"],
             componentRestrictions: { country: "ca" },
         },
-
     });
 
-    console.log(searchName)
-    console.log(location)
+    // if (loading) {
+    //     return <Spinner />
+    // }
+
     return (
         <>
             <div className="searchResult flex h-full relative">
@@ -331,9 +262,9 @@ function Search() {
                                                                 </>
                                                             }
                                                         </div>
-
+  
                                                     </div>
-
+  
                                                 </div>
                                             </div>
                                         </NavLink>
@@ -436,7 +367,7 @@ function Search() {
                                     onChange={newValue => onChange('priceRange', newValue)}
                                 />
                             )}
-
+  
                         </div>
                         <div>
                             <button
@@ -452,9 +383,9 @@ function Search() {
                                 Reset
                             </button>
                         </div>
-
+  
                     </div>
-
+  
                     {listingLocations && listingLocations.length > 0 ? (
                         <div className="pt-4">
                             <h3 className="my-5 text-xl font-semibold">Result: {listingLocations.length} {listingLocations.length === 1 ? "listing" : "listings"}</h3>
@@ -471,7 +402,6 @@ function Search() {
             </div>
         </>
     );
-
 }
 
-export default Search
+export default PropertyListing

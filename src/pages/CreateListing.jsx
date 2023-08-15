@@ -18,7 +18,7 @@ function CreateListing() {
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({
         type: "rent",
-        property: "condo",
+        property: "townhouse",
         name: "",
         bedrooms: 1,
         bathrooms: 1,
@@ -274,10 +274,10 @@ function CreateListing() {
                             <button
                                 type="button"
                                 id="property"
-                                value="condo"
+                                value="townhouse"
                                 onClick={onChange}
-                                className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "condo" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
-                                Condo
+                                className={`mr-3 p-7 font-medium text-sm uppercase shadow-md rounded hover:shadow-lg focus:shadow-lg active:shadow-lg transition duration-200 ease-in-out w-full ${property === "townhouse" ? "bg-[#856937] text-white" : "bg-white text-black"}`}>
+                                townhouse
                             </button>
                             <button
                                 type="button"

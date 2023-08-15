@@ -253,7 +253,7 @@ function EditListing() {
             await updateDoc(docRef, formDataCopy);
 
             toast.success("Listing is updated.");
-            navigate(`/category/${formDataCopy.type}/${docRef.id}`);
+            navigate(`/listing/${docRef.id}`);
         } catch (error) {
             console.error("Error submitting listing:", error);
             toast.error("Error updating listing");
