@@ -172,7 +172,7 @@ function Search() {
                     console.log(error)
                 }
             }
-            fetchListings()
+            fetchListings();
         }
 
     }, []);
