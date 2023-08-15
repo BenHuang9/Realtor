@@ -290,7 +290,7 @@ function PropertyListing() {
                             />
                         </div>
                         <div className="flex flex-wrap gap-3 mt-5">
-                            <div>
+                            <div className='w-full md:w-auto'>
                                 <label htmlFor="bedrooms" className="pl-1 pb-1 block">Bedrooms</label>
                                 <select
                                     id="bedrooms"
@@ -310,7 +310,7 @@ function PropertyListing() {
                                     <option value="8">8+</option>
                                 </select>
                             </div>
-                            <div>
+                            <div className='w-full md:w-auto'>
                                 <label htmlFor="property" className="pl-1 pb-1 block">Property</label>
                                 <select
                                     id="property"
@@ -325,7 +325,7 @@ function PropertyListing() {
                                     <option value="house">House</option>
                                 </select>
                             </div>
-                            <div>
+                            <div className='w-full md:w-auto'>
                                 <label htmlFor="type" className="pl-1 pb-1 block">Type</label>
                                 <select
                                     id="type"
