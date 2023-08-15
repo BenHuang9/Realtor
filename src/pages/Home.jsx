@@ -200,7 +200,7 @@ function Home() {
                   ))}
                 </ul>
                 <button className="block mx-auto m-5">
-                  <NavLink to="/property-listing" className="text-black mt-10 p-3 block border-2 border-black rounded-xl hover:bg-[#BF974F] hover:text-white hover:border-[#BF974F] transition duration-200 ease-in-out">
+                  <NavLink to="/advance-search" className="text-black mt-10 p-3 block border-2 border-black hover:bg-[#BF974F] hover:text-white hover:border-[#BF974F] transition duration-200 ease-in-out">
                     Show More Listings
                   </NavLink>
                 </button>

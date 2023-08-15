@@ -4,6 +4,7 @@ import {
     getDocs,
     query,
     where,
+    orderBy,
 } from "firebase/firestore";
 import { db } from '../firebase'
 import ListingItem from '../components/ListingItem'
@@ -22,7 +23,7 @@ import Spinner from '../components/Spinner';
 
 
 function Search() {
-    // Retrieve location data from localStorage
+    const [loading, setLoading] = useState(true)
     const [listingLocations, setListingLocations] = useState([]);
     const [placesWidgetRef, setPlacesWidgetRef] = useState({});
     const [zoom, setZoom] = useState(5);
@@ -55,6 +56,10 @@ function Search() {
         ),
 
     });
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
 
     function onChange(id, newValue) {
         setFilterOption(prevState => ({
@@ -97,6 +102,7 @@ function Search() {
                         });
                     });
                     setListingLocations(listings);
+                    setLoading(false);
                 } catch (error) {
                     console.log(error);
                 }
@@ -138,6 +144,7 @@ function Search() {
                         });
                     });
                     setListingLocations(listings);
+                    setLoading(false);
                 } catch (error) {
                     console.log(error);
                 }
@@ -145,8 +152,30 @@ function Search() {
             fetchListings();
         }
 
-        console.log(listingLocations.length)
-    }, [listingLocations.length]);
+        if (!storedType && !storedLocation) {
+            async function fetchListings() {
+                //get the reference
+                try {
+                    const listingsRef = collection(db, "listings")
+                    const q = query(listingsRef, orderBy("timestamp", "desc"))
+                    const querySnap = await getDocs(q)
+                    const listings = []
+                    querySnap.forEach((doc) => {
+                        return listings.push({
+                            id: doc.id,
+                            data: doc.data(),
+                        })
+                    })
+                    setListingLocations(listings)
+                    setLoading(false);
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+            fetchListings()
+        }
+
+    }, []);
 
     useEffect(() => {
         // Update price range when type changes
@@ -168,24 +197,12 @@ function Search() {
             // Use the first value in the listingLocations object's lat and lng
             setFilterOption(prevState => ({
                 ...prevState,
+                location: "",
                 lat: listingLocations[0].data.geolocation.lat,
                 lng: listingLocations[0].data.geolocation.lng,
             }));
         }
     }, [searchName, listingLocations]);
-
-    useEffect(() => {
-        // Clear localStorage when the component mounts
-        localStorage.removeItem('searchLocation');
-        localStorage.removeItem('type');
-
-        return () => {
-            // Clear localStorage when the component unmounts (optional)
-            localStorage.removeItem('searchLocation');
-            localStorage.removeItem('type');
-        };
-    }, []);
-
 
     //apply filters when click search button
     const handleSearch = async () => {
@@ -233,6 +250,8 @@ function Search() {
             });
 
             setListingLocations(listings);
+            localStorage.removeItem('searchLocation');
+            localStorage.removeItem('type');
         } catch (error) {
             console.log(error);
         }
@@ -254,7 +273,6 @@ function Search() {
         setZoom(5)
     };
 
-    console.log(listingLocations)
     useEffect(() => {
         // Update the zoom level based on the presence of listingLocations
         setZoom(listingLocations.length >= 0 ? 12 : 5);
@@ -280,8 +298,6 @@ function Search() {
 
     });
 
-    console.log(searchName)
-    console.log(location)
     return (
         <>
             <div className="searchResult flex h-full relative">
@@ -455,18 +471,22 @@ function Search() {
 
                     </div>
 
-                    {listingLocations && listingLocations.length > 0 ? (
-                        <div className="pt-4">
-                            <h3 className="my-5 text-xl font-semibold">Result: {listingLocations.length} {listingLocations.length === 1 ? "listing" : "listings"}</h3>
-                            <ul className='gap-3 gap-y-0 grid md:grid-cols-2' >
-                                {listingLocations.map(listing => (
-                                    <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
-                                ))}
-                            </ul>
-                        </div>
-                    ) :
-                        <p className="pt-4">There is no result for the search</p>
-                    }
+                    {loading ? <Spinner /> : (
+                        <>
+                            {listingLocations && listingLocations.length > 0 ? (
+                                <div className="pt-4">
+                                    <h3 className="my-5 text-xl font-semibold">Result: {listingLocations.length} {listingLocations.length === 1 ? "listing" : "listings"}</h3>
+                                    <ul className='gap-3 gap-y-0 grid md:grid-cols-2' >
+                                        {listingLocations.map(listing => (
+                                            <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                                        ))}
+                                    </ul>
+                                </div>
+                            ) :
+                                <p className="pt-4">There is no result for the search</p>
+                            }
+                        </>
+                    )}
                 </div>
             </div>
         </>

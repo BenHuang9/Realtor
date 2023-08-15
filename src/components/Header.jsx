@@ -55,42 +55,44 @@ function Header() {
                     <ul className='flex justify-around items-center gap-4'>
                         <li className="cursor-pointer px-8 py-4 md:p-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
                             <NavLink to='/' className={({ isActive }) => isActive ? "text-black" : ""} >
-                                <AiTwotoneHome className="md:hidden text-2xl"/>
+                                <AiTwotoneHome className="md:hidden text-2xl" />
                                 <p className="hidden md:block">Home</p>
                             </NavLink>
                         </li>
                         <li className="cursor-pointer p-8 py-4 md:p-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
-                            <NavLink to='/property-listing' className={({ isActive }) => isActive ? "text-black" : ""}>
-                                <FaSearch className="md:hidden text-2xl"/>
+                            <NavLink to='/advance-search' className={({ isActive }) => isActive ? "text-black" : ""}>
+                                <FaSearch className="md:hidden text-2xl" />
                                 <p className="hidden md:block">Find a property</p>
                             </NavLink>
                         </li>
                         <li className="relative cursor-pointer group p-8 py-4 md:p-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ">
                             {/* <div className="group inline-block relative"> */}
                             <NavLink to={checkSignIn ? "/profile" : "/sign-in"} className={({ isActive }) => isActive ? "text-black" : ""}>
-                                <MdManageAccounts className="md:hidden text-2xl"/>
-                                
+                                <MdManageAccounts className="md:hidden text-2xl" />
+
                                 <p className="hidden md:block">
-                                {checkSignIn ?
-                                    <span
-                                        style={{ backgroundColor: randomColor }}
-                                        className="py-1 px-2 rounded-full text-white cursor-pointer"
-                                    >
-                                        {firstName}
-                                    </span>
-                                    :
-                                    "Sign In"
-                                }
+                                    {checkSignIn ?
+                                        <span
+                                            style={{ backgroundColor: randomColor }}
+                                            className="py-1 px-2 rounded-full text-white cursor-pointer"
+                                        >
+                                            {firstName}
+                                        </span>
+                                        :
+                                        "Sign In"
+                                    }
                                 </p>
                             </NavLink>
+                            <div className="hidden md:block">
+                                {checkSignIn && (
+                                    <div className="accountOption hidden group-hover:block absolute mt-2 py-3 px-2 w-52 bg-white border rounded shadow-md">
+                                        <NavLink to="/profile" className="block py-1 px-2 hover:text-black w-full">Create New Listing</NavLink>
+                                        <h3 className="cursor-pointer py-1 px-2 hover:text-black w-full" onClick={onLogout}>Sign Out</h3>
+                                    </div>
+                                )}
+                            </div>
 
-                            {checkSignIn && (
-                                <div className="accountOption hidden group-hover:block absolute mt-2 py-3 px-2 w-52 bg-white border rounded shadow-md">
-                                    <NavLink to="/profile" className="block py-1 px-2 hover:text-black w-full">Create New Listing</NavLink>
-                                    <h3 className="cursor-pointer py-1 px-2 hover:text-black w-full" onClick={onLogout}>Sign Out</h3>
-                                </div>
-                            )}
-                            {/* </div> */}
+
                         </li>
                     </ul>
                 </div>

@@ -22,7 +22,6 @@ import { NavLink } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 
 function PropertyListing() {
-    // Retrieve location data from localStorage
     const [loading, setLoading] = useState(true)
     const [listingLocations, setListingLocations] = useState([]);
     const [placesWidgetRef, setPlacesWidgetRef] = useState({});
@@ -37,7 +36,7 @@ function PropertyListing() {
         lng: -116.516697,
         property: "",
     })
-  
+
     const {
         searchName,
         location,
@@ -48,46 +47,50 @@ function PropertyListing() {
         lng,
         property,
     } = filterOption;
-  
+
     const customMarkerIcon = L.divIcon({
         className: 'custom-marker-icon',
         html: ReactDOMServer.renderToString(
             <FaMapMarkerAlt className="text-2xl text-red-500" />
         ),
-  
+
     });
-  
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+
     function onChange(id, newValue) {
         setFilterOption(prevState => ({
             ...prevState,
             [id]: newValue
         }));
     }
-  
+
     // show result when home page search by location, find a home button, and find a rent button
     useEffect(() => {
         async function fetchListings() {
             //get the reference
             try {
-              const listingsRef = collection(db, "listings")
-              const q = query(listingsRef, orderBy("timestamp", "desc"))
-              const querySnap = await getDocs(q)
-              const listings = []
-              querySnap.forEach((doc) => {
-                return listings.push({
-                  id: doc.id,
-                  data: doc.data(),
+                const listingsRef = collection(db, "listings")
+                const q = query(listingsRef, orderBy("timestamp", "desc"))
+                const querySnap = await getDocs(q)
+                const listings = []
+                querySnap.forEach((doc) => {
+                    return listings.push({
+                        id: doc.id,
+                        data: doc.data(),
+                    })
                 })
-              })
-              setListingLocations(listings)
-              setLoading(false);
+                setListingLocations(listings)
+                setLoading(false);
             } catch (error) {
-              console.log(error)
+                console.log(error)
             }
-          }
-          fetchListings()
+        }
+        fetchListings()
     }, []);
-  
+
     console.log(listingLocations)
     useEffect(() => {
         // Update price range when type changes
@@ -103,7 +106,7 @@ function PropertyListing() {
             }));
         }
     }, [type]);
-  
+
     useEffect(() => {
         if (!searchName && listingLocations.length > 0) {
             // Use the first value in the listingLocations object's lat and lng
@@ -114,11 +117,11 @@ function PropertyListing() {
             }));
         }
     }, [searchName, listingLocations]);
-  
+
     //apply filters when click search button
     const handleSearch = async () => {
         try {
-  
+
             if (Object.keys(placesWidgetRef).length !== 0) {
                 // console.log(placesWidgetRef)
                 setFilterOption(prevState => ({
@@ -127,27 +130,27 @@ function PropertyListing() {
                     lng: placesWidgetRef.geometry.location.lng(),
                 }))
             }
-  
+
             const listingsRef = collection(db, "listings");
             let q = query(listingsRef);
-  
-  
-  
+
+
+
             if (location) {
                 q = query(q, where("cityState.city", "==", location));
             }
-  
+
             if (type) {
                 q = query(q, where("type", "==", type));
             }
-  
+
             if (property) {
                 q = query(q, where("property", "==", property));
             }
-  
+
             const querySnap = await getDocs(q);
             const listings = [];
-  
+
             querySnap.forEach((doc) => {
                 const data = doc.data();
                 const price = data.price;
@@ -161,13 +164,13 @@ function PropertyListing() {
                     });
                 }
             });
-  
+
             setListingLocations(listings);
         } catch (error) {
             console.log(error);
         }
     };
-  
+
     const handleReset = () => {
         setFilterOption({
             searchName: "",
@@ -179,17 +182,16 @@ function PropertyListing() {
             lng: -116.516697,
             property: "",
         });
-  
+
         setListingLocations([])
         setZoom(5)
     };
-  
-    console.log(listingLocations)
+
     useEffect(() => {
         // Update the zoom level based on the presence of listingLocations
         setZoom(listingLocations.length >= 0 ? 12 : 5);
     }, [listingLocations]);
-  
+
     const { ref } = usePlacesWidget({
         apiKey: process.env.REACT_APP_GEOCODE_API_KEY,
         onPlaceSelected: (place) => {
@@ -199,19 +201,15 @@ function PropertyListing() {
                 location: place.address_components[0].long_name,
                 searchName: place.formatted_address
             }))
-  
+
             setPlacesWidgetRef(place)
-  
+
         },
         options: {
             types: ["locality"],
             componentRestrictions: { country: "ca" },
         },
     });
-
-    // if (loading) {
-    //     return <Spinner />
-    // }
 
     return (
         <>
@@ -263,7 +261,7 @@ function PropertyListing() {
                                                             }
                                                         </div>
                                                     </div>
-  
+
                                                 </div>
                                             </div>
                                         </NavLink>
@@ -366,7 +364,7 @@ function PropertyListing() {
                                     onChange={newValue => onChange('priceRange', newValue)}
                                 />
                             )}
-  
+
                         </div>
                         <div>
                             <button
@@ -382,21 +380,24 @@ function PropertyListing() {
                                 Reset
                             </button>
                         </div>
-  
+
                     </div>
-  
-                    {listingLocations && listingLocations.length > 0 ? (
-                        <div className="pt-4">
-                            <h3 className="my-5 text-xl font-semibold">Result: {listingLocations.length} {listingLocations.length === 1 ? "listing" : "listings"}</h3>
-                            <ul className='gap-3 gap-y-0 grid md:grid-cols-2' >
-                                {listingLocations.map(listing => (
-                                    <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
-                                ))}
-                            </ul>
-                        </div>
-                    ) :
-                        <p className="pt-4">There is no result for the search</p>
-                    }
+                    {loading ? <Spinner /> : (
+                        <>
+                            {listingLocations && listingLocations.length > 0 ? (
+                                <div className="pt-4">
+                                    <h3 className="my-5 text-xl font-semibold">Result: {listingLocations.length} {listingLocations.length === 1 ? "listing" : "listings"}</h3>
+                                    <ul className='gap-3 gap-y-0 grid md:grid-cols-2' >
+                                        {listingLocations.map(listing => (
+                                            <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                                        ))}
+                                    </ul>
+                                </div>
+                            ) :
+                                <p className="pt-4">There is no result for the search</p>
+                            }
+                        </>
+                    )}
                 </div>
             </div>
         </>
