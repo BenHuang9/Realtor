@@ -100,7 +100,10 @@ function Home() {
     <>
 
       <section className="bg-[#131110] homeBanner">
-        <div className="lg:h-[80vh] flex flex-wrap-reverse justify-around items-center max-w-[1440px] mx-auto p-8 gap-4">
+        <div className="lg:h-[80vh] md:flex flex-row-reverse md:justify-around items-center max-w-[1440px] mx-auto p-8 gap-4">
+          <div>
+            <img src={HeroImg} alt="home hero banner" className=" h-[300px] w-[300px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 mb-3 border-white/[.12]" data-aos="fade-left" data-aos-duration="2000" />
+          </div>
           <div className="text-white">
             <h1 className=" text-[2rem] leading-[2rem] md:text-[2.5rem] md:leading-[3rem] lg:text-[3.8rem] lg:leading-[4rem] font-bold">
               Discover<br />
@@ -130,9 +133,7 @@ function Home() {
               </button>
             </form>
           </div>
-          <div>
-            <img src={HeroImg} alt="home hero banner" className=" h-[450px] lg:w-[480px] lg:h-[560px] overflow-hidden rounded-t-[15rem] border-8 border-white/[.12]" data-aos="fade-left" data-aos-duration="2500" />
-          </div>
+
         </div>
       </section>
 
