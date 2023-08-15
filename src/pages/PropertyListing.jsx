@@ -262,7 +262,6 @@ function PropertyListing() {
                                                                 </>
                                                             }
                                                         </div>
-  
                                                     </div>
   
                                                 </div>
@@ -275,7 +274,7 @@ function PropertyListing() {
                     )}
                 </div>
                 <div className="result flex-1 p-5 flex flex-col bg-[#fcfbfd]">
-                    <div className="filterOptions bg-white py-10 px-5 shadow-lg rounded-xl">
+                    <div className="filterOptions bg-white py-5 md:py-10 px-5 shadow-lg rounded-xl">
                         <div className="flex items-center w-full border rounded-xl justify-between px-2 py-1">
                             <MdLocationOn className="text-[#856937] text-2xl" />
                             <input

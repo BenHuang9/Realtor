@@ -191,17 +191,19 @@ function Home() {
           </div>
           <div>
             {recentListings && recentListings.length > 0 && (
-              <div className=" mx-auto pt-4 space-y-6">
-                <div>
-                  <NavLink to="/property-listing" className="px-3 text-sm text-blue-600 hover:text-blue-800 transition duration-200 ease-in-out">
-                    show more for sale
+              <div className=" mx-auto">
+
+                <ul className='gap-3 gap-y-0 grid md:grid-cols-2 lg:grid-cols-3 mt-6' >
+                  {recentListings.map(listing => (
+                    <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                  ))}
+                </ul>
+                <button className="block mx-auto m-5">
+                  <NavLink to="/property-listing" className="text-black mt-10 p-3 block border-2 border-black rounded-xl hover:bg-[#BF974F] hover:text-white hover:border-[#BF974F] transition duration-200 ease-in-out">
+                    Show More Listings
                   </NavLink>
-                  <ul className='gap-3 gap-y-0 grid md:grid-cols-2 lg:grid-cols-3 mt-6' >
-                    {recentListings.map(listing => (
-                      <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
-                    ))}
-                  </ul>
-                </div>
+                </button>
+
               </div>
             )}
           </div>

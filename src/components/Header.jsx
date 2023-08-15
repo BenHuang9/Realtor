@@ -12,12 +12,14 @@ function Header() {
 
     useEffect(() => {
         // Check if random color has been generated in localStorage
-        const storedRandomColor = localStorage.getItem('randomColor');
-        if (storedRandomColor) {
-            setRandomColor(storedRandomColor);
-        }
+
 
         onAuthStateChanged(auth, (user) => {
+            const storedRandomColor = localStorage.getItem('randomColor');
+            if (storedRandomColor) {
+                setRandomColor(storedRandomColor);
+            }
+
             if (user) {
                 setCheckSignIn(true);
                 setFirstName(auth.currentUser.displayName[0]);
@@ -34,7 +36,7 @@ function Header() {
             }
         });
     }, [auth]);
-
+    console.log(randomColor)
     async function onLogout() {
         await auth.signOut();
         navigate('/');
