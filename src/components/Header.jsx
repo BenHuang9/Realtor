@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { MdManageAccounts } from 'react-icons/md'
 import { AiTwotoneHome } from 'react-icons/ai'
 import { FaSearch } from 'react-icons/fa'
-
+import Logo from '../asset/images/Logo.png'
 function Header() {
 
     const auth = getAuth()
@@ -49,7 +49,7 @@ function Header() {
         <div className=" bg-white border-t border-gray-200 fixed -bottom-1 w-full border-b shadow-sm md:sticky md:top-0 z-40 ">
             <header className='md:flex md:justify-between items-center sm:px-8 max-w-[1440px] mx-auto'>
                 <div className="hidden md:block">
-                    <NavLink to='/'><img src="https://www.realtor.ca/images/logo.svg" alt="logo" className='cursor-pointer h-9' /></NavLink>
+                    <NavLink to='/'><img src={Logo} alt="logo" className='cursor-pointer h-[60px] py-1' /></NavLink>
                 </div>
                 <div className="menu">
                     <ul className='flex justify-around items-center gap-4'>
