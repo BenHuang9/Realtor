@@ -285,7 +285,7 @@ function Search() {
     return (
         <>
             <div className="searchResult flex h-full relative">
-                <div className='hidden md:block mapResult w-full flex-1 h-full sticky top-[46px] left-0'>
+                <div className='hidden md:block mapResult w-full flex-1 h-full sticky top-[48px] left-0'>
                     {listingLocations && (
                         <MapContainer
                             key={`${lat}-${lng}`}
@@ -343,7 +343,7 @@ function Search() {
                         </MapContainer>
                     )}
                 </div>
-                <div className="result flex-1 p-5 flex flex-col bg-[#fcfbfd]">
+                <div className="result flex-1 p-5 pb-16 flex flex-col bg-[#fcfbfd]">
                     <div className="filterOptions bg-white py-5 md:py-10 px-5 shadow-lg rounded-xl">
                         <div className="flex items-center w-full border rounded-xl justify-between px-2 py-1">
                             <MdLocationOn className="text-[#856937] text-2xl" />

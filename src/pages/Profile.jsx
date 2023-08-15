@@ -103,12 +103,12 @@ function Profile() {
     await auth.signOut();
     navigate('/');
     localStorage.removeItem('randomColor');
-}
+  }
 
   return (
     <>
       <section className="profile">
-        <div className="profile-Wrapper lg:flex max-w-[1440px] mx-auto p-8">
+        <div className="profile-Wrapper lg:flex max-w-[1440px] mx-auto p-5 md:py-5">
           <Tab.Group>
             <Tab.List className="profile-list flex justify-between">
               <div className="flex lg:flex-col text-xl mt-6">
@@ -129,7 +129,7 @@ function Profile() {
 
             <Tab.Panels className="basis-4/6 ml-auto mt-6 ">
               <Tab.Panel>
-                <div className="max-w-6xl px-3 mx-auto">
+                <div className="max-w-6xl mx-auto">
 
                   <div className="border-b pb-5 flex justify-between">
                     <h2 className="text-4xl font-semibold flex items-center gap-2">
@@ -138,7 +138,7 @@ function Profile() {
                     </h2>
 
                   </div>
-                  <ul className="grid md:grid-cols-2 mt-6 mb-6 gap-5">
+                  <ul className="grid md:grid-cols-2 mt-6 mb-6 md:gap-x-5">
                     <li className="mb-4 border-2 border-dashed text-gray-400 flex justify-center items-center hover:border-black hover:text-black transition duration-200 ease-in-out">
                       <button type="submit" className="w-full h-[100px] lg:h-full uppercase px-7 py-3 text-sm font-medium">
 

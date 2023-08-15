@@ -1,6 +1,10 @@
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom';
+import { MdManageAccounts } from 'react-icons/md'
+import { AiTwotoneHome } from 'react-icons/ai'
+import { FaSearch } from 'react-icons/fa'
+
 function Header() {
 
     const auth = getAuth()
@@ -42,22 +46,31 @@ function Header() {
 
 
     return (
-        <div className="bg-white border-b shadow-sm sticky top-0 z-40">
-            <header className='flex justify-between items-center px-8 max-w-[1440px] mx-auto'>
-                <div>
+        <div className=" bg-white border-t border-gray-200 fixed -bottom-1 w-full border-b shadow-sm md:sticky md:top-0 z-40 ">
+            <header className='md:flex md:justify-between items-center sm:px-8 max-w-[1440px] mx-auto'>
+                <div className="hidden md:block">
                     <NavLink to='/'><img src="https://www.realtor.ca/images/logo.svg" alt="logo" className='cursor-pointer h-9' /></NavLink>
                 </div>
-                <div className="flex items-center">
-                    <ul className='flex gap-5'>
-                        <li className="cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
-                            <NavLink to='/' className={({ isActive }) => isActive ? "text-black" : ""}>Home</NavLink>
+                <div className="menu">
+                    <ul className='flex justify-around items-center gap-4'>
+                        <li className="cursor-pointer px-8 py-4 md:p-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
+                            <NavLink to='/' className={({ isActive }) => isActive ? "text-black" : ""} >
+                                <AiTwotoneHome className="md:hidden text-2xl"/>
+                                <p className="hidden md:block">Home</p>
+                            </NavLink>
                         </li>
-                        <li className="cursor-pointer py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
-                            <NavLink to='/property-listing' className={({ isActive }) => isActive ? "text-black" : ""}>Find a property</NavLink>
+                        <li className="cursor-pointer p-8 py-4 md:p-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent">
+                            <NavLink to='/property-listing' className={({ isActive }) => isActive ? "text-black" : ""}>
+                                <FaSearch className="md:hidden text-2xl"/>
+                                <p className="hidden md:block">Find a property</p>
+                            </NavLink>
                         </li>
-                        <li className="relative cursor-pointer group py-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ">
+                        <li className="relative cursor-pointer group p-8 py-4 md:p-3 text-sm font-semibold text-gray-400 border-b-[3px] border-b-transparent ">
                             {/* <div className="group inline-block relative"> */}
-                            <NavLink to={checkSignIn ? "/profile" : "/sign-in"}>
+                            <NavLink to={checkSignIn ? "/profile" : "/sign-in"} className={({ isActive }) => isActive ? "text-black" : ""}>
+                                <MdManageAccounts className="md:hidden text-2xl"/>
+                                
+                                <p className="hidden md:block">
                                 {checkSignIn ?
                                     <span
                                         style={{ backgroundColor: randomColor }}
@@ -68,6 +81,7 @@ function Header() {
                                     :
                                     "Sign In"
                                 }
+                                </p>
                             </NavLink>
 
                             {checkSignIn && (
@@ -79,9 +93,6 @@ function Header() {
                             {/* </div> */}
                         </li>
                     </ul>
-                    <div>
-
-                    </div>
                 </div>
 
             </header>
