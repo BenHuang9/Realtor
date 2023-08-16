@@ -38,7 +38,7 @@ function Listing() {
         fetchListing();
     }, [params.listingId]);
 
-    console.log(type)
+    // console.log(type)
     useEffect(() => {
         if (type === "sales") {
             console.log('it is sell')
@@ -122,24 +122,21 @@ function Listing() {
         },
     };
 
+
+
+    if (loading) {
+        return <Spinner />
+    }
+
     const Marker = ({ text }) => (
         <div className="marker">
             <FaMapMarkerAlt className="text-2xl text-red-500" />
         </div>
     );
 
-    const location = {
-        lat: 49.1649021,
-        lng: -123.1705467,
-    };
-
-    const defaultProps = {
-        center: location,
-        zoom: 15, // Adjust the zoom level as needed
-    };
-
-    if (loading) {
-        return <Spinner />
+    const mapLocation = {
+        lat: listing.geolocation.lat,
+        lng: listing.geolocation.lng,
     }
 
     console.log(relatedListings)
@@ -263,14 +260,17 @@ function Listing() {
                         <div className="propertyMap rounded-lg shadow-lg p-7 mb-7 bg-white">
                             <h3 className="mb-5 font-semibold">Location</h3>
                             <div className="w-full h-[350px] lg:h-[500px]">
+
                                 <GoogleMapReact
                                     bootstrapURLKeys={{ key: process.env.REACT_APP_GEOCODE_API_KEY }}
-                                    defaultCenter={defaultProps.center}
-                                    defaultZoom={defaultProps.zoom}
+                                    defaultCenter={mapLocation}
+                                    defaultZoom={15}
                                     className="rounded-lg"
                                 >
-                                    {/* Add a marker for the specified location */}
-                                    <Marker lat={location.lat} lng={location.lng} text="Your Location" />
+                                    {/* Render a marker only if geolocation data is available */}
+                                    {listing.geolocation && (
+                                        <Marker lat={mapLocation.lat} lng={mapLocation.lng} text="Your Location" />
+                                    )}
                                 </GoogleMapReact>
                             </div>
                         </div>
@@ -279,12 +279,6 @@ function Listing() {
                         {relatedListings && relatedListings.length > 0 && (
                             <div className="similarListings mb-7">
                                 <h3 className="mb-5 text-2xl font-bold">Similar Listings</h3>
-                                {/* <ul className='grid grid-cols-2 gap-5 mt-6' >
-                                    {relatedListings.map(listing => (
-                                        <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
-                                    ))}
-                                </ul> */}
-
                                 <OwlCarousel
                                     className="owl-theme"
                                     {...options}>
