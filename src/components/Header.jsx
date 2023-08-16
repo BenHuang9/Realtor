@@ -13,22 +13,25 @@ function Header() {
     const [firstName, setFirstName] = useState("")
     const [randomColor, setRandomColor] = useState(" ")
 
-
     useEffect(() => {
-        const storedRandomColor = localStorage.getItem('randomColor');
-        if (storedRandomColor) {
-            setRandomColor(storedRandomColor);
-        } else {
-            // Generate a random color and store it in localStorage
-            const newRandomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-            setRandomColor(newRandomColor);
-            localStorage.setItem('randomColor', newRandomColor);
-        }
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 setCheckSignIn(true);
                 setFirstName(auth.currentUser.displayName[0]);
+                const storedRandomColor = localStorage.getItem('randomColor');
+
+                if (storedRandomColor) {
+                    setRandomColor(storedRandomColor);
+                    console.log("no");
+                } else {
+                    // Generate a random color and store it in localStorage
+                    const newRandomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+                    localStorage.setItem('randomColor', newRandomColor);
+                    setRandomColor(newRandomColor);
+                    console.log('yes');
+                }
+
             } else {
                 setCheckSignIn(false);
                 setFirstName('');
@@ -36,13 +39,17 @@ function Header() {
         });
     }, [auth]);
 
-    console.log(randomColor);
-
     async function onLogout() {
         await auth.signOut();
+        localStorage.removeItem('randomColor'); // Removing from localStorage
         navigate('/');
-        localStorage.removeItem('randomColor');
     }
+
+
+
+
+
+
 
 
     return (
