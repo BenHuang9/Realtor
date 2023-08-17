@@ -26,6 +26,10 @@ function Listing() {
     const [type, setType] = useState(null);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
+      }, []);
+      
+    useEffect(() => {
         async function fetchListing() {
             const docRef = doc(db, "listings", params.listingId);
             const docSnap = await getDoc(docRef);
