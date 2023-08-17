@@ -139,7 +139,7 @@ function Home() {
 
 
       <section className="py-10 service">
-        <div className="max-w-[1440px] mx-auto p-8 overflow-hidden">
+        <div className="max-w-[1440px] mx-auto p-5 overflow-hidden">
           <div>
             <span className="text-[#BF974F] font-semibold uppercase block mb-3">Our Service</span>
             <h2 className="text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] lg:leading-[3.8rem] font-bold mb-6">We Make Process Simple</h2>
@@ -185,7 +185,7 @@ function Home() {
       </section>
 
       <section className='listing py-10 bg-[#F6F4F0]'>
-        <div className="max-w-[1440px] mx-auto p-8">
+        <div className="max-w-[1440px] mx-auto p-5">
           <div>
             <span className="text-[#BF974F] font-semibold uppercase block mb-3">Recent Properties</span>
             <h2 className="text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] lg:leading-[3.8rem] font-bold mb-6">Explore the latest<br /> properties available</h2>
@@ -212,7 +212,7 @@ function Home() {
       </section>
 
       <section className='ourGoal py-10'>
-        <div className="flex flex-wrap-reverse justify-start lg:justify-between items-center max-w-[1440px] mx-auto p-8 gap-4">
+        <div className="flex flex-wrap-reverse justify-start lg:justify-between items-center max-w-[1440px] mx-auto p-5 gap-4">
           <div className="lg:w-[50%]">
             <span className="text-[#BF974F] font-semibold uppercase block mb-3">Our Goal</span>
             <h2 className="text-[2rem] md:text-[2.5rem] lg:text-[3.5rem] lg:leading-[3.8rem] font-bold mb-6">
