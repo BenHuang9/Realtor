@@ -167,7 +167,7 @@ function Listing() {
                 </LightGallery>
 
 
-                <div className=" max-w-[1440px] lg:flex lg:mx-auto p-8 gap-8 relative ">
+                <div className=" max-w-[1440px] lg:flex lg:mx-auto p-5 gap-8 relative ">
                     <div className="propertyInfo w-full basis-9/12 lg:max-w-[75%]">
                         <div className="houseTitle sm:flex flex-wrap items-center justify-between mb-3">
                             <h1 className="mb-1 text-2xl sm:text-4xl sm:mb-0 font-bold ">
