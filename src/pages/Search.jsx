@@ -31,7 +31,7 @@ function Search() {
         searchName: "",
         location: "",
         bedrooms: null,
-        priceRange: [0, 4000000],
+        priceRange: [0, 5000000],
         type: null,
         lat: 49.09996035,
         lng: -116.516697,
@@ -182,12 +182,12 @@ function Search() {
         if (type === 'rent') {
             setFilterOption(prevState => ({
                 ...prevState,
-                priceRange: [0, 5000],
+                priceRange: [0, 6000],
             }));
         } else if (type === 'sales' || type === "") {
             setFilterOption(prevState => ({
                 ...prevState,
-                priceRange: [0, 4000000],
+                priceRange: [0, 5000000],
             }));
         }
     }, [type]);
@@ -262,7 +262,7 @@ function Search() {
             searchName: "",
             location: "",
             bedrooms: null,
-            priceRange: [0, 4000000],
+            priceRange: [0, 5000000],
             type: null,
             lat: 49.09996035,
             lng: -116.516697,
@@ -322,7 +322,7 @@ function Search() {
                                     <Popup>
                                         <NavLink to={`/listing/${listing.id}`} className="contents text-black">
                                             <div className="propertyInfo flex gap-3">
-                                                <img src={listing.data.imgUrls[1]} alt="property" className=" w-32" />
+                                                <img src={listing.data.imgUrls[0]} alt="property" className=" w-32" />
                                                 <div className="flex flex-col justify-between">
                                                     <p className="pb-1">For {listing.data.type}</p>
                                                     <p className=" text-base">
@@ -435,7 +435,7 @@ function Search() {
                                 <Slider
                                     range
                                     min={0}
-                                    max={5000}
+                                    max={6000}
                                     step={1}
                                     id="priceRange"
                                     value={priceRange}
@@ -445,7 +445,7 @@ function Search() {
                                 <Slider
                                     range
                                     min={0}
-                                    max={4000000}
+                                    max={5000000}
                                     step={1}
                                     id="priceRange"
                                     value={priceRange}

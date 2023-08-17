@@ -282,11 +282,12 @@ function Listing() {
                                 <OwlCarousel
                                     className="owl-theme"
                                     {...options}>
-                                    {relatedListings.map(listing => (
-                                        <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
-                                    ))}
+                                    {relatedListings
+                                        .filter(relatedListing => relatedListing.id !== params.listingId) // Filter out listings with the same ID
+                                        .map(listing => (
+                                            <ListingItem key={listing.id} id={listing.id} listing={listing.data} />
+                                        ))}
                                 </OwlCarousel>
-
                             </div>
                         )}
                     </div>

@@ -45,13 +45,6 @@ function Header() {
         navigate('/');
     }
 
-
-
-
-
-
-
-
     return (
         <div className=" bg-white border-t border-gray-200 fixed -bottom-1 w-full border-b shadow-sm md:sticky md:top-0 z-40 ">
             <header className='md:flex md:justify-between items-center sm:px-8 max-w-[1440px] mx-auto'>
